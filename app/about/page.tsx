@@ -17,7 +17,7 @@ export default function AboutPage() {
             <div className="fixed inset-0 bg-gradient-to-b from-black via-black/95 to-black pointer-events-none" />
 
             {/* Top Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 py-4">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 py-4 bg-black/80 backdrop-blur-md border-b border-white/10">
                 <Link href="/" className="relative z-20">
                     <Image
                         src="/stdiox.png"
@@ -38,7 +38,7 @@ export default function AboutPage() {
             </nav>
 
             {/* Main Content */}
-            <main className="relative pt-32 pb-20 px-4 md:px-8">
+            <main className="relative pt-24 pb-16 px-4 md:px-8 md:pt-32 md:pb-20">
                 <div className="max-w-5xl mx-auto">
                     {/* Header Section */}
                     <div className={`mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
