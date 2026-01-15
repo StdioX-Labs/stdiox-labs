@@ -3,12 +3,17 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { trackPageView } from '../utils/mixpanel';
 
 export default function AboutPage() {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
         setIsVisible(true);
+        trackPageView('About', {
+            page_title: 'StdioX Labs - About Us',
+            page_path: '/about',
+        });
     }, []);
 
     return (

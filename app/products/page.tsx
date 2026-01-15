@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { trackPageView, trackEvent } from '../utils/mixpanel';
 
 export default function ProductsPage() {
     const [isVisible, setIsVisible] = useState(false);
@@ -10,7 +11,27 @@ export default function ProductsPage() {
 
     useEffect(() => {
         setIsVisible(true);
+        trackPageView('Products', {
+            page_title: 'StdioX Labs - Products',
+            page_path: '/products',
+        });
     }, []);
+
+    const handleProductClick = (productName: string, productUrl: string | null) => {
+        trackEvent('Product Clicked', {
+            product_name: productName,
+            product_url: productUrl,
+            page: 'Products',
+        });
+    };
+
+    const handleProductHover = (productName: string) => {
+        setHoveredProduct(productName);
+        trackEvent('Product Hovered', {
+            product_name: productName,
+            page: 'Products',
+        });
+    };
 
     const products = [
         {
@@ -107,8 +128,9 @@ export default function ProductsPage() {
                                         href={product.url!}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        onMouseEnter={() => setHoveredProduct(product.id)}
+                                        onMouseEnter={() => handleProductHover(product.name)}
                                         onMouseLeave={() => setHoveredProduct(null)}
+                                        onClick={() => handleProductClick(product.name, product.url)}
                                         className="group block relative p-8 md:p-12 border-2 border-white/30 hover:border-white bg-white/5 backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:bg-white/10 cursor-pointer"
                                     >
                                         {/* Corner Accents */}

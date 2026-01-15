@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { trackPageView, trackEvent } from '../utils/mixpanel';
 
 export default function ContactPage() {
     const [isVisible, setIsVisible] = useState(false);
@@ -10,7 +11,19 @@ export default function ContactPage() {
 
     useEffect(() => {
         setIsVisible(true);
+        trackPageView('Contact', {
+            page_title: 'StdioX Labs - Contact',
+            page_path: '/contact',
+        });
     }, []);
+
+    const handleContactClick = (method: string, value: string) => {
+        trackEvent('Contact Method Clicked', {
+            method: method,
+            value: value,
+            page: 'Contact',
+        });
+    };
 
     const contactMethods = [
         {
@@ -97,6 +110,7 @@ export default function ContactPage() {
                                 rel={method.id === 'location' ? 'noopener noreferrer' : undefined}
                                 onMouseEnter={() => setHoveredCard(method.id)}
                                 onMouseLeave={() => setHoveredCard(null)}
+                                onClick={() => handleContactClick(method.label, method.value)}
                                 className="group relative p-8 border-2 border-white/20 hover:border-white bg-white/5 backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:bg-white/10 cursor-pointer"
                                 style={{
                                     transitionDelay: `${index * 100}ms`

@@ -3,11 +3,20 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { trackEvent } from '../utils/mixpanel';
 
 export default function HeroSection() {
     const [isVisible, setIsVisible] = useState(false);
     const [typedText, setTypedText] = useState('');
     const fullText = 'StdioX Labs';
+
+    const handleNavigationClick = (destination: string) => {
+        trackEvent('Navigation Clicked', {
+            destination: destination,
+            from_page: 'Home',
+            location: 'Hero Section',
+        });
+    };
 
     useEffect(() => {
         setIsVisible(true);
@@ -64,6 +73,7 @@ export default function HeroSection() {
             <div className="absolute top-0 right-0 z-20">
                 <Link
                     href="/products"
+                    onClick={() => handleNavigationClick('Products')}
                     className="group relative px-4 sm:px-6 md:px-8 pt-2.5 sm:pt-3 pb-3 sm:pb-4 bg-white/5 backdrop-blur-lg border-l-2 border-b-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
                     style={{
                         fontFamily: 'var(--font-orbitron)',
@@ -92,6 +102,7 @@ export default function HeroSection() {
             <div className="absolute bottom-0 left-0 z-20">
                 <Link
                     href="/about"
+                    onClick={() => handleNavigationClick('About')}
                     className="group relative px-4 sm:px-6 md:px-8 pt-3 sm:pt-4 pb-2.5 sm:pb-3 bg-white/5 backdrop-blur-lg border-r-2 border-t-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
                     style={{
                         fontFamily: 'var(--font-orbitron)',
@@ -118,6 +129,7 @@ export default function HeroSection() {
             <div className="absolute bottom-0 right-0 z-20">
                 <Link
                     href="/contact"
+                    onClick={() => handleNavigationClick('Contact')}
                     className="group relative px-4 sm:px-6 md:px-8 pt-3 sm:pt-4 pb-2.5 sm:pb-3 bg-white/5 backdrop-blur-lg border-l-2 border-t-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
                     style={{
                         fontFamily: 'var(--font-orbitron)',
