@@ -5,61 +5,97 @@ import { navLinks } from '../data/navigation';
 
 export default function SiteFooter() {
     return (
-        <footer className="relative border-t border-white/10 bg-black/90 px-4 md:px-8 py-16 text-sm">
-            <div className="max-w-7xl mx-auto grid gap-12 md:grid-cols-[1.5fr_repeat(4,1fr)]">
-                <div>
-                    <Image
-                        src="/stdiox.png"
-                        alt="StdioX Labs"
-                        width={150}
-                        height={60}
-                        className="w-32 h-auto invert brightness-0 mb-4"
-                    />
-                    <p className="text-gray-400 leading-relaxed max-w-xs">
-                        Engineering the digital infrastructure Africa needs — ticketing, payments, lending and communications.
-                    </p>
-                    <p className="text-gray-500 mt-4">Kileleshwa, Nairobi · Kenya</p>
+        <footer className="relative overflow-hidden bg-black border-t border-white/10 text-sm">
+            {/* Accent line and glow */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/60 to-transparent" />
+            <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-3xl opacity-10 pointer-events-none bg-gradient-to-r from-violet-500 via-emerald-400 to-sky-500" />
+
+            <div className="relative max-w-7xl mx-auto px-4 md:px-8 pt-20 pb-10">
+                {/* Top: brand and contact */}
+                <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 pb-14 border-b border-white/10">
+                    <div className="max-w-md">
+                        <Image
+                            src="/stdiox.png"
+                            alt="StdioX Labs"
+                            width={150}
+                            height={60}
+                            className="w-32 h-auto invert brightness-0 mb-6"
+                        />
+                        <p className="text-2xl md:text-3xl font-semibold tracking-tight text-white leading-snug">
+                            Building the infrastructure African business runs on.
+                        </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <a
+                            href="mailto:info@stdiox.com"
+                            className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition-colors"
+                        >
+                            info@stdiox.com
+                            <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                        <Link
+                            href="/contact"
+                            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 transition-colors"
+                        >
+                            Book a demo
+                        </Link>
+                    </div>
                 </div>
 
-                {productCategories.map((category) => (
-                    <div key={category.id}>
-                        <h3 className="text-white text-xs tracking-[0.2em] uppercase mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            {category.label.split(' ')[0]}
+                {/* Links */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-10 py-14">
+                    {productCategories.map((category) => (
+                        <div key={category.id}>
+                            <h3 className="flex items-center gap-2 text-white text-xs tracking-[0.2em] uppercase mb-5" style={{ fontFamily: 'var(--font-orbitron)' }}>
+                                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: category.accent[0] }} />
+                                {category.label.split(' ')[0]}
+                            </h3>
+                            <ul className="space-y-3">
+                                {category.products.map((product) => (
+                                    <li key={product.id}>
+                                        <Link href={`/products#${product.id}`} className="text-gray-400 hover:text-white transition-colors">
+                                            {product.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+
+                    <div>
+                        <h3 className="flex items-center gap-2 text-white text-xs tracking-[0.2em] uppercase mb-5" style={{ fontFamily: 'var(--font-orbitron)' }}>
+                            <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-white" />
+                            Company
                         </h3>
-                        <ul className="space-y-2">
-                            {category.products.map((product) => (
-                                <li key={product.id}>
-                                    <Link href={`/products#${product.id}`} className="text-gray-400 hover:text-white transition-colors">
-                                        {product.name}
+                        <ul className="space-y-3">
+                            {navLinks.map((link) => (
+                                <li key={link.href}>
+                                    <Link href={link.href} className="text-gray-400 hover:text-white transition-colors">
+                                        {link.label}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
-                ))}
-
-                <div>
-                    <h3 className="text-white text-xs tracking-[0.2em] uppercase mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                        Company
-                    </h3>
-                    <ul className="space-y-2">
-                        {navLinks.map((link) => (
-                            <li key={link.href}>
-                                <Link href={link.href} className="text-gray-400 hover:text-white transition-colors">
-                                    {link.label}
-                                </Link>
-                            </li>
-                        ))}
-                        <li>
-                            <a href="mailto:info@stdiox.com" className="text-gray-400 hover:text-white transition-colors">
-                                info@stdiox.com
-                            </a>
-                        </li>
-                    </ul>
                 </div>
-            </div>
-            <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/10 text-gray-500 text-xs">
-                © {new Date().getFullYear()} StdioX Labs. Built in Nairobi, for Africa.
+
+                {/* Wordmark */}
+                <p
+                    aria-hidden="true"
+                    className="select-none text-center font-bold leading-none tracking-tight bg-gradient-to-b from-white/15 to-transparent bg-clip-text text-transparent text-[18vw] lg:text-[13rem]"
+                    style={{ fontFamily: 'var(--font-orbitron)' }}
+                >
+                    STDIOX
+                </p>
+
+                {/* Bottom bar */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-6 border-t border-white/10 text-gray-500 text-xs">
+                    <p>© {new Date().getFullYear()} StdioX Labs. Built in Nairobi, for Africa.</p>
+                    <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Kileleshwa, Nairobi · Kenya
+                    </p>
+                </div>
             </div>
         </footer>
     );

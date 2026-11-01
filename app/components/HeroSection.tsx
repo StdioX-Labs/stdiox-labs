@@ -1,15 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import SiteNav from './SiteNav';
+import ProductVisual from './ProductVisual';
+import { productCategories } from '../data/products';
 import { trackEvent } from '../utils/mixpanel';
 
-export default function HeroSection() {
-    const [isVisible, setIsVisible] = useState(false);
-    const [typedText, setTypedText] = useState('');
-    const fullText = 'StdioX Labs';
+const ticketingAccent = productCategories[0].accent;
 
+// Illustrative activity chips layered over the hero mockup. Sample data, not live metrics.
+const floatingCards = [
+    {
+        label: 'StdioX Pay',
+        title: 'M-Pesa · KES 4,500 received',
+        accent: ['#34d399', '#a3e635'],
+        position: '-left-6 md:-left-14 -top-8',
+        delay: '0s',
+    },
+    {
+        label: 'Looker',
+        title: 'Approved · low risk · 38 ms',
+        accent: ['#34d399', '#a3e635'],
+        position: '-right-4 md:-right-10 top-1/2',
+        delay: '1.5s',
+    },
+    {
+        label: 'StdioX Comms',
+        title: 'WhatsApp ticket delivered',
+        accent: ['#38bdf8', '#818cf8'],
+        position: '-left-4 md:-left-10 -bottom-6',
+        delay: '3s',
+    },
+];
+
+export default function HeroSection() {
     const handleNavigationClick = (destination: string) => {
         trackEvent('Navigation Clicked', {
             destination: destination,
@@ -18,195 +42,101 @@ export default function HeroSection() {
         });
     };
 
-    useEffect(() => {
-        setIsVisible(true);
-
-        let currentIndex = 0;
-        let isDeleting = false;
-
-        const typeLoop = () => {
-            if (!isDeleting && currentIndex <= fullText.length) {
-                // Typing forward
-                setTypedText(fullText.slice(0, currentIndex));
-                currentIndex++;
-            } else if (!isDeleting && currentIndex > fullText.length) {
-                // Pause at the end before deleting
-                setTimeout(() => {
-                    isDeleting = true;
-                }, 2000);
-            } else if (isDeleting && currentIndex > 0) {
-                // Deleting backward
-                currentIndex--;
-                setTypedText(fullText.slice(0, currentIndex));
-            } else if (isDeleting && currentIndex === 0) {
-                // Pause at the beginning before typing again
-                isDeleting = false;
-                setTimeout(() => {
-                    currentIndex = 0;
-                }, 500);
-            }
-        };
-
-        const typingInterval = setInterval(typeLoop, isDeleting ? 75 : 150);
-
-        return () => clearInterval(typingInterval);
-    }, []);
+    const fadeIn = (delay: string) => `animate-fade-up ${delay}`;
 
     return (
-        <section className="relative flex min-h-screen items-center justify-center px-4 md:px-6 py-12 md:py-20">
-            {/* Background overlay to ensure text readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none" />
+        <section className="relative min-h-screen overflow-hidden bg-black">
+            <SiteNav />
 
-            {/* Top Left Logo */}
-            <div className="absolute top-4 left-4 md:top-5 md:left-3 z-20">
-                <Image
-                    src="/stdiox.png"
-                    alt="StdioX Labs"
-                    width={150}
-                    height={60}
-                    className="w-28 sm:w-32 md:w-40 lg:w-48 h-auto invert brightness-0 drop-shadow-lg"
-                    priority
-                />
-            </div>
+            {/* Background: grid and aurora glows */}
+            <div className="absolute inset-0 bg-grid pointer-events-none" />
+            <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full blur-3xl opacity-25 pointer-events-none bg-gradient-to-br from-violet-500 to-fuchsia-500 animate-aurora" />
+            <div className="absolute top-1/3 -right-40 w-[600px] h-[600px] rounded-full blur-3xl opacity-20 pointer-events-none bg-gradient-to-br from-emerald-400 to-sky-500 animate-aurora [animation-delay:-6s]" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-black pointer-events-none" />
 
-            {/* Top Right Tab Navigation */}
-            <div className="absolute top-0 right-0 z-20 flex">
-                {[
-                    { href: '/products', label: 'Products' },
-                    { href: '/funding', label: 'Funding' },
-                ].map((tab) => (
+            <div className="relative max-w-7xl mx-auto px-4 md:px-8 pt-32 md:pt-40 pb-24 grid lg:grid-cols-[1.1fr_1fr] gap-16 lg:gap-12 items-center min-h-screen">
+                {/* Copy */}
+                <div>
                     <Link
-                        key={tab.href}
-                        href={tab.href}
-                        onClick={() => handleNavigationClick(tab.label)}
-                        className="group relative px-4 sm:px-6 md:px-8 pt-2.5 sm:pt-3 pb-3 sm:pb-4 bg-white/5 backdrop-blur-lg border-l-2 border-b-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
-                        style={{
-                            fontFamily: 'var(--font-orbitron)',
-                            clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)',
-                        }}
+                        href="/funding"
+                        onClick={() => handleNavigationClick('Funding')}
+                        className={`group inline-flex items-center gap-3 pl-1.5 pr-4 py-1.5 mb-8 rounded-full border border-white/15 bg-white/[0.04] backdrop-blur text-sm text-gray-300 hover:border-white/30 hover:bg-white/[0.08] ${fadeIn('')}`}
                     >
-                        <span className="relative z-10 text-white text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold uppercase drop-shadow-lg group-hover:tracking-[0.3em] transition-all duration-300">
-                            {tab.label}
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-black bg-gradient-to-r from-violet-300 to-amber-200">
+                            New
                         </span>
-                        {/* Gradient overlay on hover */}
-                        <div
-                            className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
-                        />
-                        {/* Animated shine effect */}
-                        <div
-                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                            style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                        </div>
+                        Event prefinancing on SoldOutAfrica
+                        <span className="text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all">→</span>
                     </Link>
-                ))}
-            </div>
 
-            {/* Bottom Left - About Us Tab */}
-            <div className="absolute bottom-0 left-0 z-20">
-                <Link
-                    href="/about"
-                    onClick={() => handleNavigationClick('About')}
-                    className="group relative px-4 sm:px-6 md:px-8 pt-3 sm:pt-4 pb-2.5 sm:pb-3 bg-white/5 backdrop-blur-lg border-r-2 border-t-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
-                    style={{
-                        fontFamily: 'var(--font-orbitron)',
-                        clipPath: 'polygon(0% 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)',
-                    }}
-                >
-                    <span className="relative z-10 text-white text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold uppercase drop-shadow-lg group-hover:tracking-[0.3em] transition-all duration-300">
-                        About Us
-                    </span>
-                    <div
-                        className="absolute inset-0 bg-gradient-to-tl from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ clipPath: 'polygon(0% 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)' }}
-                    />
-                    <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                        style={{ clipPath: 'polygon(0% 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)' }}
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                    </div>
-                </Link>
-            </div>
-
-            {/* Bottom Right - Contact Us Tab */}
-            <div className="absolute bottom-0 right-0 z-20">
-                <Link
-                    href="/contact"
-                    onClick={() => handleNavigationClick('Contact')}
-                    className="group relative px-4 sm:px-6 md:px-8 pt-3 sm:pt-4 pb-2.5 sm:pb-3 bg-white/5 backdrop-blur-lg border-l-2 border-t-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
-                    style={{
-                        fontFamily: 'var(--font-orbitron)',
-                        clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)',
-                    }}
-                >
-                    <span className="relative z-10 text-white text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold uppercase drop-shadow-lg group-hover:tracking-[0.3em] transition-all duration-300">
-                        Contact Us
-                    </span>
-                    <div
-                        className="absolute inset-0 bg-gradient-to-tr from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
-                    />
-                    <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                        style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                    </div>
-                </Link>
-            </div>
-            <div className="relative max-w-5xl mx-auto text-center space-y-6 md:space-y-8 z-10">
-                {/* Main Logo/Title with Typing Animation */}
-                <h1
-                    className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-wide md:tracking-wider text-white transition-all duration-1000 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                        }`}
-                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                >
-                    {typedText.split('').map((char, index) => (
-                        <span
-                            key={index}
-                            className={char === 'X' ? 'text-gray-400' : ''}
-                        >
-                            {char}
+                    <h1 className={`font-sans text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.02] text-white mb-8 ${fadeIn('[animation-delay:150ms]')}`}>
+                        The infrastructure behind{' '}
+                        <span className="bg-gradient-to-r from-violet-400 via-fuchsia-300 to-emerald-300 bg-clip-text text-transparent animate-gradient">
+                            African business.
                         </span>
+                    </h1>
+
+                    <p className={`text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl mb-10 ${fadeIn('[animation-delay:300ms]')}`}>
+                        StdioX Labs builds and runs ticketing, payments, lending and communications platforms — and funds the events that sell on them.
+                    </p>
+
+                    <div className={`flex flex-col sm:flex-row gap-3 mb-14 ${fadeIn('[animation-delay:500ms]')}`}>
+                        <Link
+                            href="/products"
+                            onClick={() => handleNavigationClick('Products')}
+                            className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition-all duration-300"
+                        >
+                            Explore products
+                            <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </Link>
+                        <Link
+                            href="/contact"
+                            onClick={() => handleNavigationClick('Contact')}
+                            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 transition-all duration-300"
+                        >
+                            Talk to our team
+                        </Link>
+                    </div>
+
+                    {/* Product lines */}
+                    <div className={`grid grid-cols-3 gap-4 max-w-lg border-t border-white/10 pt-6 ${fadeIn('[animation-delay:700ms]')}`}>
+                        {productCategories.map((category) => (
+                            <a
+                                key={category.id}
+                                href={`/products#${category.id}`}
+                                onClick={() => trackEvent('Category Clicked', { category: category.label, page: 'Home' })}
+                                className="group"
+                            >
+                                <span className="block h-0.5 w-8 mb-3 rounded-full group-hover:w-12 transition-all" style={{ background: `linear-gradient(90deg, ${category.accent[0]}, ${category.accent[1]})` }} />
+                                <span className="block text-sm text-gray-300 group-hover:text-white transition-colors leading-snug">
+                                    {category.label.split(' ')[0]}
+                                </span>
+                                <span className="block text-xs text-gray-600 mt-1">{category.products.length} products</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Product mockup */}
+                <div className={`relative mx-4 md:mx-10 lg:mx-0 lg:ml-8 ${fadeIn('[animation-delay:300ms]')}`}>
+                    <div className="lg:[transform:perspective(1600px)_rotateY(-8deg)_rotateX(4deg)]">
+                        <ProductVisual productId="soldoutafrica" accent={ticketingAccent} />
+                    </div>
+                    {floatingCards.map((card) => (
+                        <div
+                            key={card.label}
+                            className={`absolute ${card.position} hidden sm:flex items-center gap-3 px-4 py-3 rounded-xl border border-white/15 bg-black/70 backdrop-blur-xl shadow-2xl animate-float`}
+                            style={{ animationDelay: card.delay }}
+                        >
+                            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: card.accent[0], boxShadow: `0 0 12px ${card.accent[0]}` }} />
+                            <div>
+                                <p className="text-[10px] uppercase tracking-widest text-gray-500">{card.label}</p>
+                                <p className="text-xs text-white font-medium whitespace-nowrap">{card.title}</p>
+                            </div>
+                        </div>
                     ))}
-                    <span className="animate-pulse">|</span>
-                </h1>
-
-                {/* Divider Line */}
-                <div
-                    className={`w-32 md:w-48 h-px bg-white mx-auto transition-all duration-1000 delay-[1800ms] shadow-lg ${isVisible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
-                        }`}
-                />
-
-                {/* Vision & Engineering Focus */}
-                <p
-                    className={`text-sm md:text-base leading-relaxed text-gray-300 max-w-2xl mx-auto transition-all duration-1000 delay-[2000ms] px-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                        }`}
-                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                >
-                    Engineering the digital infrastructure Africa needs.
-                    <span className="block mt-3 text-gray-300 text-xs md:text-sm">
-                        Ticketing · Payments · Lending · Communications · Event Funding
-                    </span>
-                    <span className="block mt-2 text-gray-400 text-xs md:text-sm">
-                        From first principles. Built for scale. Designed for impact.
-                    </span>
-                </p>
+                </div>
             </div>
-
-            {/* Scroll Cue */}
-            <a
-                href="#platform"
-                onClick={() => handleNavigationClick('Platform')}
-                className={`absolute bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-gray-400 hover:text-white transition-all duration-1000 delay-[2400ms] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-                style={{ fontFamily: 'var(--font-orbitron)' }}
-            >
-                <span className="text-[10px] tracking-[0.3em] uppercase">Explore the Platform</span>
-                <span className="text-lg animate-bounce">↓</span>
-            </a>
         </section>
     );
 }
