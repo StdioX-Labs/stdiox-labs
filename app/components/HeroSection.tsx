@@ -70,32 +70,38 @@ export default function HeroSection() {
             </div>
 
             {/* Top Right Tab Navigation */}
-            <div className="absolute top-0 right-0 z-20">
-                <Link
-                    href="/products"
-                    onClick={() => handleNavigationClick('Products')}
-                    className="group relative px-4 sm:px-6 md:px-8 pt-2.5 sm:pt-3 pb-3 sm:pb-4 bg-white/5 backdrop-blur-lg border-l-2 border-b-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
-                    style={{
-                        fontFamily: 'var(--font-orbitron)',
-                        clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)',
-                    }}
-                >
-                    <span className="relative z-10 text-white text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold uppercase drop-shadow-lg group-hover:tracking-[0.3em] transition-all duration-300">
-                        Products
-                    </span>
-                    {/* Gradient overlay on hover */}
-                    <div
-                        className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
-                    />
-                    {/* Animated shine effect */}
-                    <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                        style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
+            <div className="absolute top-0 right-0 z-20 flex">
+                {[
+                    { href: '/products', label: 'Products' },
+                    { href: '/funding', label: 'Funding' },
+                ].map((tab) => (
+                    <Link
+                        key={tab.href}
+                        href={tab.href}
+                        onClick={() => handleNavigationClick(tab.label)}
+                        className="group relative px-4 sm:px-6 md:px-8 pt-2.5 sm:pt-3 pb-3 sm:pb-4 bg-white/5 backdrop-blur-lg border-l-2 border-b-2 border-white/40 hover:bg-white/15 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer block"
+                        style={{
+                            fontFamily: 'var(--font-orbitron)',
+                            clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)',
+                        }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                    </div>
-                </Link>
+                        <span className="relative z-10 text-white text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold uppercase drop-shadow-lg group-hover:tracking-[0.3em] transition-all duration-300">
+                            {tab.label}
+                        </span>
+                        {/* Gradient overlay on hover */}
+                        <div
+                            className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
+                        />
+                        {/* Animated shine effect */}
+                        <div
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                            style={{ clipPath: 'polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%)' }}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                        </div>
+                    </Link>
+                ))}
             </div>
 
             {/* Bottom Left - About Us Tab */}
@@ -182,11 +188,25 @@ export default function HeroSection() {
                     style={{ fontFamily: 'var(--font-orbitron)' }}
                 >
                     Engineering the digital infrastructure Africa needs.
-                    <span className="block mt-3 text-gray-400 text-xs md:text-sm">
+                    <span className="block mt-3 text-gray-300 text-xs md:text-sm">
+                        Ticketing · Payments · Lending · Communications · Event Funding
+                    </span>
+                    <span className="block mt-2 text-gray-400 text-xs md:text-sm">
                         From first principles. Built for scale. Designed for impact.
                     </span>
                 </p>
             </div>
+
+            {/* Scroll Cue */}
+            <a
+                href="#platform"
+                onClick={() => handleNavigationClick('Platform')}
+                className={`absolute bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-gray-400 hover:text-white transition-all duration-1000 delay-[2400ms] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+                style={{ fontFamily: 'var(--font-orbitron)' }}
+            >
+                <span className="text-[10px] tracking-[0.3em] uppercase">Explore the Platform</span>
+                <span className="text-lg animate-bounce">↓</span>
+            </a>
         </section>
     );
 }

@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import SiteNav from '../components/SiteNav';
+import SiteFooter from '../components/SiteFooter';
 import { trackPageView, trackEvent } from '../utils/mixpanel';
 
 export default function ContactPage() {
@@ -59,26 +60,7 @@ export default function ContactPage() {
             {/* Background overlay */}
             <div className="fixed inset-0 bg-gradient-to-b from-black via-black/95 to-black pointer-events-none" />
 
-            {/* Top Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 py-4 bg-black/80 backdrop-blur-md border-b border-white/10">
-                <Link href="/" className="relative z-20">
-                    <Image
-                        src="/stdiox.png"
-                        alt="StdioX Labs"
-                        width={150}
-                        height={60}
-                        className="w-28 sm:w-32 md:w-40 h-auto invert brightness-0 drop-shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
-                        priority
-                    />
-                </Link>
-                <Link
-                    href="/"
-                    className="px-4 py-2 border border-white/30 hover:border-white rounded-full text-sm backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer"
-                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                >
-                    Back to Home
-                </Link>
-            </nav>
+            <SiteNav />
 
             {/* Main Content */}
             <main className="relative pt-24 pb-16 px-4 md:px-8 md:pt-32 md:pb-20">
@@ -171,10 +153,24 @@ export default function ContactPage() {
                                 Ready to Start?
                             </h2>
                             <p className="text-gray-300 leading-relaxed mb-6 text-center">
-                                Whether you're looking to build infrastructure, solve complex technical challenges,
-                                or explore partnership opportunities—we're here to help.
+                                Whether you want a product demo, funding for your next event, a custom build or a
+                                partnership—we're here to help.
                             </p>
                             <div className="space-y-4 text-gray-400 text-sm">
+                                <div className="flex items-start gap-3">
+                                    <span className="text-white text-lg">•</span>
+                                    <p>
+                                        <strong className="text-white">Product Demos:</strong> SoldOutAfrica, StdioX Comms, Pay,
+                                        Looker, Score, CRM and Bookings—tell us which and we&apos;ll set up a walkthrough.
+                                    </p>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <span className="text-white text-lg">•</span>
+                                    <p>
+                                        <strong className="text-white">Event Funding:</strong> Share your date, venue, lineup
+                                        and budget and we&apos;ll tell you what we can prefinance.
+                                    </p>
+                                </div>
                                 <div className="flex items-start gap-3">
                                     <span className="text-white text-lg">•</span>
                                     <p>
@@ -224,6 +220,8 @@ export default function ContactPage() {
                     </div>
                 </div>
             </main>
+
+            <SiteFooter />
         </div>
     );
 }

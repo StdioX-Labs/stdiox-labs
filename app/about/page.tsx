@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import SiteNav from '../components/SiteNav';
+import SiteFooter from '../components/SiteFooter';
 import { trackPageView } from '../utils/mixpanel';
 
 export default function AboutPage() {
@@ -21,26 +22,7 @@ export default function AboutPage() {
             {/* Background overlay */}
             <div className="fixed inset-0 bg-gradient-to-b from-black via-black/95 to-black pointer-events-none" />
 
-            {/* Top Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 py-4 bg-black/80 backdrop-blur-md border-b border-white/10">
-                <Link href="/" className="relative z-20">
-                    <Image
-                        src="/stdiox.png"
-                        alt="StdioX Labs"
-                        width={150}
-                        height={60}
-                        className="w-28 sm:w-32 md:w-40 h-auto invert brightness-0 drop-shadow-lg hover:scale-105 transition-transform duration-300"
-                        priority
-                    />
-                </Link>
-                <Link
-                    href="/"
-                    className="px-4 py-2 border border-white/30 hover:border-white rounded-full text-sm backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
-                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                >
-                    Back to Home
-                </Link>
-            </nav>
+            <SiteNav />
 
             {/* Main Content */}
             <main className="relative pt-24 pb-16 px-4 md:px-8 md:pt-32 md:pb-20">
@@ -200,6 +182,8 @@ export default function AboutPage() {
                     </section>
                 </div>
             </main>
+
+            <SiteFooter />
         </div>
     );
 }
