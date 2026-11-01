@@ -14,6 +14,8 @@ export interface ProductCategory {
     id: string;
     label: string;
     summary: string;
+    /** Gradient stops used for this category's accents. */
+    accent: [string, string];
     products: Product[];
 }
 
@@ -26,54 +28,55 @@ export const statusLabels: Record<ProductStatus, string> = {
 export const productCategories: ProductCategory[] = [
     {
         id: 'events',
-        label: 'Events & Ticketing',
-        summary: 'The full stack behind an event — from the on-sale to the money that funds it.',
+        label: 'Ticketing for Business',
+        summary: 'Ticketing infrastructure for event companies, venues and brands — on our platform, under your brand, or through our API.',
+        accent: ['#a78bfa', '#f472b6'],
         products: [
             {
                 id: 'soldoutafrica',
                 name: 'SoldOutAfrica',
-                tagline: 'Premier Events Platform',
+                tagline: 'The Ticketing Platform',
                 description:
-                    "Africa's premier events ticketing and merchandising platform. Organizers create an event and start selling the same day, with M-Pesa, card and mobile money, realtime settlement and infrastructure sized for on-sale peaks.",
+                    'The ticketing and merchandise platform event companies run their sales on. Go live the same day with M-Pesa, card and mobile money, realtime settlement, and infrastructure sized for on-sale peaks.',
                 url: 'https://soldoutafrica.com/',
                 status: 'live',
                 features: [
-                    'End-to-end ticketing and merchandise',
+                    'Ticketing, merchandise and check-in',
                     'M-Pesa, card and mobile money checkout',
-                    'Realtime settlement to organizers',
-                    'Split payments for co-promoters',
-                    'Marketing attribution per channel and link',
-                    'Event prefinancing from a dedicated capital pool',
+                    'Realtime settlement and split payouts',
+                    'Organizer dashboard with live sales',
+                    'Marketing attribution per channel',
+                    'Event prefinancing from a capital pool',
                 ],
             },
             {
-                id: 'soa-organizer',
-                name: 'Organizer Dashboard',
-                tagline: 'Run the Event, Not the Spreadsheet',
+                id: 'white-label',
+                name: 'White-Label Ticketing',
+                tagline: 'Your Brand. Our Engine.',
                 description:
-                    'The control room for SoldOutAfrica organizers: live sales and capacity, ticket tiers, payouts, attendees and check-in — installable as a mobile app.',
-                url: 'https://organiser.soldoutafrica.com/',
-                status: 'live',
+                    'A fully branded ticketing storefront for event companies and venues — your domain, your templates, your organizer team — running on the SoldOutAfrica engine.',
+                url: null,
+                status: 'enterprise',
                 features: [
-                    'Live sales and capacity tracking',
-                    'Tier, pricing and inventory management',
-                    'Payouts and settlement history',
-                    'Installable progressive web app',
+                    'Custom domain and branding',
+                    'Multiple organizer accounts',
+                    'Promo codes, flash sales and gift cards',
+                    'Automated reconciliation and reports',
                 ],
             },
             {
-                id: 'tokea',
-                name: 'Tokea',
-                tagline: 'Discover. Tap. Attend.',
+                id: 'ticketing-api',
+                name: 'Ticketing API',
+                tagline: 'Ticketing Inside Your Product',
                 description:
-                    'A consumer-first event discovery and checkout experience. Featured events, quick ticket selection and one-flow payment over M-Pesa and Paystack.',
-                url: 'https://tokea.com/',
-                status: 'live',
+                    'Direct API access to events, inventory, checkout and orders for businesses that want ticketing inside their own apps and sites — with a sandbox and enterprise SLAs.',
+                url: null,
+                status: 'enterprise',
                 features: [
-                    'Featured events and discovery',
-                    'Drawer-based ticket selection',
-                    'M-Pesa and Paystack payments',
-                    'Shareable order and ticket pages',
+                    'Events, inventory and orders API',
+                    'Hosted M-Pesa and card checkout',
+                    'Sandbox testing environment',
+                    'Integration support and SLAs',
                 ],
             },
         ],
@@ -82,6 +85,7 @@ export const productCategories: ProductCategory[] = [
         id: 'fintech',
         label: 'Payments & Financial Infrastructure',
         summary: 'Moving, protecting and lending money — engineered for African rails.',
+        accent: ['#34d399', '#a3e635'],
         products: [
             {
                 id: 'pay',
@@ -134,6 +138,7 @@ export const productCategories: ProductCategory[] = [
         id: 'business',
         label: 'Communications & Business Software',
         summary: 'The everyday tools businesses run on — reach, customers and bookings.',
+        accent: ['#38bdf8', '#818cf8'],
         products: [
             {
                 id: 'comms',

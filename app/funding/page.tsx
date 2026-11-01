@@ -64,9 +64,10 @@ export default function FundingPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white">
-            {/* Background overlay */}
-            <div className="fixed inset-0 bg-gradient-to-b from-black via-black/95 to-black pointer-events-none" />
+        <div className="relative min-h-screen bg-black text-white overflow-x-hidden">
+            {/* Background accents */}
+            <div className="absolute inset-x-0 top-0 h-[700px] bg-grid pointer-events-none" />
+            <div className="absolute -top-40 right-0 w-[700px] h-[500px] rounded-full blur-3xl opacity-25 pointer-events-none bg-gradient-to-br from-violet-500 via-fuchsia-400 to-amber-300" />
 
             <SiteNav />
 
@@ -78,12 +79,15 @@ export default function FundingPage() {
                             Funding · Event Prefinancing
                         </p>
                         <h1
-                            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent"
+                            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight"
                             style={{ fontFamily: 'var(--font-orbitron)' }}
                         >
-                            The event should fund the event.
+                            The event should{' '}
+                            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">
+                                fund the event.
+                            </span>
                         </h1>
-                        <div className="w-32 h-1 bg-white mb-8" />
+                        <div className="w-32 h-1 mb-8 bg-gradient-to-r from-violet-400 to-pink-400" />
                         <p className="text-lg md:text-2xl text-gray-300 leading-relaxed max-w-3xl">
                             Through SoldOutAfrica, we advance capital to organizers before ticket sales begin — venue deposit,
                             artist advance, marketing — and it is repaid automatically from ticket revenue as it comes in.

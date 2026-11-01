@@ -4,14 +4,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import SiteNav from '../components/SiteNav';
 import SiteFooter from '../components/SiteFooter';
-import { productCategories, statusLabels, type Product } from '../data/products';
+import ProductShowcase from '../components/ProductShowcase';
+import { productCategories } from '../data/products';
 import { trackPageView, trackEvent } from '../utils/mixpanel';
-
-const statusStyles: Record<Product['status'], string> = {
-    live: 'bg-green-500/20 border-green-500/50 text-green-400',
-    enterprise: 'bg-white/10 border-white/40 text-white',
-    'early-access': 'bg-amber-500/15 border-amber-500/40 text-amber-300',
-};
 
 export default function ProductsPage() {
     const [isVisible, setIsVisible] = useState(false);
@@ -24,162 +19,102 @@ export default function ProductsPage() {
         });
     }, []);
 
-    const handleProductClick = (productName: string, productUrl: string | null) => {
-        trackEvent('Product Clicked', {
-            product_name: productName,
-            product_url: productUrl,
-            page: 'Products',
-        });
-    };
-
-    const handleProductHover = (productName: string) => {
-        trackEvent('Product Hovered', {
-            product_name: productName,
-            page: 'Products',
-        });
-    };
-
     return (
-        <div className="min-h-screen bg-black text-white">
-            {/* Background overlay */}
-            <div className="fixed inset-0 bg-gradient-to-b from-black via-black/95 to-black pointer-events-none" />
-
+        <div className="min-h-screen bg-black text-white overflow-x-hidden">
             <SiteNav />
 
-            {/* Main Content */}
-            <main className="relative pt-24 pb-16 px-4 md:px-8 md:pt-32 md:pb-20">
-                <div className="max-w-7xl mx-auto">
-                    {/* Header Section */}
-                    <div className={`mb-16 text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <h1
-                            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            Our Products
-                        </h1>
-                        <div className="w-32 h-1 bg-white mb-8 mx-auto" />
-                        <p
-                            className="text-lg md:text-2xl text-gray-400 leading-relaxed max-w-3xl mx-auto"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            Ticketing, payments, lending and communications — one engineering team, one stack.
-                        </p>
-                    </div>
+            {/* Header Section */}
+            <header className="relative pt-36 pb-24 px-4 md:px-8 md:pt-44 overflow-hidden">
+                <div className="absolute inset-0 bg-grid pointer-events-none" />
+                <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-3xl opacity-25 pointer-events-none bg-gradient-to-r from-violet-500 via-emerald-400 to-sky-500" />
+                <div className={`relative max-w-5xl mx-auto text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <p className="text-xs tracking-[0.3em] uppercase text-gray-400 mb-6" style={{ fontFamily: 'var(--font-orbitron)' }}>
+                        The StdioX Stack
+                    </p>
+                    <h1
+                        className="text-4xl sm:text-5xl md:text-7xl font-bold mb-8 leading-tight"
+                        style={{ fontFamily: 'var(--font-orbitron)' }}
+                    >
+                        Products that run{' '}
+                        <span className="bg-gradient-to-r from-violet-400 via-emerald-300 to-sky-400 bg-clip-text text-transparent">
+                            African business
+                        </span>
+                    </h1>
+                    <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto mb-12">
+                        Ticketing, payments, lending and communications — built by one engineering team on one stack, and sold to the businesses that depend on them.
+                    </p>
 
                     {/* Category Jump Links */}
-                    <div className={`flex flex-wrap justify-center gap-3 mb-20 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <div className="grid sm:grid-cols-3 gap-4 text-left">
                         {productCategories.map((category) => (
                             <a
                                 key={category.id}
                                 href={`#${category.id}`}
-                                className="px-5 py-2 border border-white/30 hover:border-white rounded-full text-xs tracking-[0.15em] uppercase hover:bg-white/10 transition-all duration-300"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
+                                onClick={() => trackEvent('Category Clicked', { category: category.label, page: 'Products' })}
+                                className="group relative p-5 rounded-xl border border-white/15 bg-white/[0.03] hover:bg-white/[0.07] transition-all duration-300 overflow-hidden"
                             >
-                                {category.label}
+                                <div className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${category.accent[0]}, ${category.accent[1]})` }} />
+                                <p className="font-semibold text-white mb-1" style={{ fontFamily: 'var(--font-orbitron)' }}>
+                                    {category.label}
+                                </p>
+                                <p className="text-gray-500 text-sm">
+                                    {category.products.map((product) => product.name).join(' · ')}
+                                </p>
                             </a>
                         ))}
                     </div>
+                </div>
+            </header>
 
-                    {/* Product Categories */}
-                    <div className="space-y-24">
-                        {productCategories.map((category) => (
-                            <section key={category.id} id={category.id} className="scroll-mt-28">
-                                <div className="mb-10 border-l-4 border-white pl-6">
-                                    <h2
-                                        className="text-2xl md:text-4xl font-semibold text-white mb-3"
-                                        style={{ fontFamily: 'var(--font-orbitron)' }}
-                                    >
-                                        {category.label}
-                                    </h2>
-                                    <p className="text-gray-400 text-lg">{category.summary}</p>
-                                </div>
+            {/* Product Categories */}
+            <main className="relative">
+                {productCategories.map((category) => (
+                    <section key={category.id} id={category.id} className="relative px-4 md:px-8 py-24 md:py-32 border-t border-white/10 scroll-mt-20 overflow-hidden">
+                        <div
+                            className="absolute -right-40 top-20 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none"
+                            style={{ background: `linear-gradient(135deg, ${category.accent[0]}, ${category.accent[1]})` }}
+                        />
+                        <div className="relative max-w-7xl mx-auto">
+                            <div className="mb-20 max-w-3xl">
+                                <h2
+                                    className="text-3xl md:text-6xl font-bold mb-5 bg-clip-text text-transparent"
+                                    style={{ fontFamily: 'var(--font-orbitron)', backgroundImage: `linear-gradient(90deg, #fff, ${category.accent[0]})` }}
+                                >
+                                    {category.label}
+                                </h2>
+                                <p className="text-gray-400 text-lg md:text-xl">{category.summary}</p>
+                            </div>
+                            <div className="space-y-28 md:space-y-36">
+                                {category.products.map((product, index) => (
+                                    <ProductShowcase
+                                        key={product.id}
+                                        product={product}
+                                        accent={category.accent}
+                                        reverse={index % 2 === 1}
+                                        page="Products"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                ))}
 
-                                <div className="grid gap-6 lg:grid-cols-3">
-                                    {category.products.map((product) => (
-                                        <article
-                                            key={product.id}
-                                            id={product.id}
-                                            onMouseEnter={() => handleProductHover(product.name)}
-                                            className="group relative flex flex-col p-8 border-2 border-white/20 hover:border-white bg-white/5 backdrop-blur-sm transition-all duration-500 hover:bg-white/10 scroll-mt-28"
-                                        >
-                                            {/* Corner Accents */}
-                                            <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                            <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                                            <div className="flex items-start justify-between gap-4 mb-3">
-                                                <h3
-                                                    className="text-2xl md:text-3xl font-bold text-white"
-                                                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                                                >
-                                                    {product.name}
-                                                </h3>
-                                                <span className={`shrink-0 px-3 py-1 border text-[10px] font-semibold uppercase rounded-full ${statusStyles[product.status]}`}>
-                                                    {statusLabels[product.status]}
-                                                </span>
-                                            </div>
-
-                                            <p className="text-gray-400 mb-5" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                                {product.tagline}
-                                            </p>
-
-                                            <p className="text-gray-300 leading-relaxed mb-6">
-                                                {product.description}
-                                            </p>
-
-                                            <ul className="space-y-2 mb-8">
-                                                {product.features.map((feature) => (
-                                                    <li key={feature} className="flex items-start gap-3 text-sm">
-                                                        <span className="text-white">→</span>
-                                                        <span className="text-gray-400">{feature}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-
-                                            <div className="mt-auto">
-                                                {product.url ? (
-                                                    <a
-                                                        href={product.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        onClick={() => handleProductClick(product.name, product.url)}
-                                                        className="inline-flex items-center gap-3 text-white font-semibold group-hover:gap-5 transition-all duration-300"
-                                                        style={{ fontFamily: 'var(--font-orbitron)' }}
-                                                    >
-                                                        Visit Platform <span className="text-xl">→</span>
-                                                    </a>
-                                                ) : (
-                                                    <Link
-                                                        href="/contact"
-                                                        onClick={() => handleProductClick(product.name, null)}
-                                                        className="inline-flex items-center gap-3 text-white font-semibold group-hover:gap-5 transition-all duration-300"
-                                                        style={{ fontFamily: 'var(--font-orbitron)' }}
-                                                    >
-                                                        {product.status === 'early-access' ? 'Join Early Access' : 'Request a Demo'} <span className="text-xl">→</span>
-                                                    </Link>
-                                                )}
-                                            </div>
-                                        </article>
-                                    ))}
-                                </div>
-                            </section>
-                        ))}
-                    </div>
-
-                    {/* Funding Callout */}
+                {/* Funding Callout */}
+                <section className="px-4 md:px-8 pb-24">
                     <Link
                         href="/funding"
-                        onClick={() => handleProductClick('Event Prefinancing', '/funding')}
-                        className="group block mt-24 p-8 md:p-12 border-2 border-white bg-white text-black transition-all duration-500 hover:scale-[1.01]"
+                        onClick={() => trackEvent('Product Clicked', { product_name: 'Event Prefinancing', product_url: '/funding', page: 'Products' })}
+                        className="group relative block max-w-7xl mx-auto p-10 md:p-16 rounded-3xl overflow-hidden text-black transition-transform duration-500 hover:scale-[1.01] bg-gradient-to-br from-violet-400 via-fuchsia-300 to-amber-200"
                     >
-                        <p className="text-xs tracking-[0.3em] uppercase mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
+                        <p className="text-xs tracking-[0.3em] uppercase mb-4 font-semibold" style={{ fontFamily: 'var(--font-orbitron)' }}>
                             Funding
                         </p>
                         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                             <div>
-                                <h2 className="text-2xl md:text-4xl font-bold mb-3" style={{ fontFamily: 'var(--font-orbitron)' }}>
+                                <h2 className="text-3xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
                                     We prefinance events.
                                 </h2>
-                                <p className="text-gray-700 text-lg max-w-2xl">
+                                <p className="text-black/70 text-lg max-w-2xl">
                                     Venue deposits, artist advances and marketing — fronted from a dedicated capital pool and repaid automatically from ticket sales.
                                 </p>
                             </div>
@@ -190,28 +125,28 @@ export default function ProductsPage() {
                     </Link>
 
                     {/* Bottom CTA */}
-                    <div className="mt-20 text-center">
+                    <div className="mt-24 text-center">
                         <p className="text-gray-400 mb-8 text-lg">
-                            Need something we haven&apos;t built yet? We build custom platforms too.
+                            Need something we haven&apos;t built yet? We build custom platforms on the same stack.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
-                                className="px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 hover:scale-105 cursor-pointer"
+                                className="px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 hover:scale-105"
                                 style={{ fontFamily: 'var(--font-orbitron)' }}
                             >
                                 Get in Touch
                             </Link>
                             <Link
                                 href="/about"
-                                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300 hover:scale-105 cursor-pointer"
+                                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300 hover:scale-105"
                                 style={{ fontFamily: 'var(--font-orbitron)' }}
                             >
                                 About Our Team
                             </Link>
                         </div>
                     </div>
-                </div>
+                </section>
             </main>
 
             <SiteFooter />
