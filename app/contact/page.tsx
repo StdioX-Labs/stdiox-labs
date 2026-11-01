@@ -39,9 +39,9 @@ export default function ContactPage() {
             id: 'phone',
             icon: '☎',
             label: 'Phone',
-            value: '+254 715 066 651',
-            href: 'tel:+254715066651',
-            description: 'Brian - Direct Line',
+            value: '+254 183 053 254',
+            href: 'tel:+254183053254',
+            description: 'Customer Support',
             subtext: 'Available Mon-Fri, 9AM-6PM EAT'
         },
         {

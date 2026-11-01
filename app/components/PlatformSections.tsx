@@ -1,36 +1,34 @@
 'use client';
 
 import Link from 'next/link';
-import ProductShowcase from './ProductShowcase';
-import { productCategories } from '../data/products';
+import ProductVisual from './ProductVisual';
+import { MagneticLink } from './LiquidGlass';
+import { productCategories, statusLabels } from '../data/products';
 import { trackEvent } from '../utils/mixpanel';
 
-const [events, fintech, business] = productCategories;
+// Neutral chrome accent so the product mockups sit inside the gray glass theme.
+const chrome: [string, string] = ['#f4f4f5', '#71717a'];
 
 const capabilities = [
     {
         title: 'Ticketing for Business',
         body: 'SoldOutAfrica, white-label storefronts and a ticketing API for event companies, venues and brands.',
         href: '/products#events',
-        accent: events.accent,
     },
     {
         title: 'Payments & Fraud',
         body: 'Card collection, M-Pesa and mobile money, with pre-authorisation fraud screening that wins chargebacks.',
         href: '/products#pay',
-        accent: fintech.accent,
     },
     {
         title: 'Lending & Core Banking',
         body: 'KYC, face verification, credit scoring and automated loan decisions on a full core banking ledger.',
         href: '/products#score',
-        accent: fintech.accent,
     },
     {
         title: 'Communications & CRM',
         body: 'SMS, email and WhatsApp through one API, AI agents, customer intelligence and appointment booking.',
         href: '/products#business',
-        accent: business.accent,
     },
 ];
 
@@ -52,6 +50,16 @@ const withFunding = [0, 40, 40, 15, 15, 0, 20, 50, 90];
 const toPath = (values: number[]) =>
     values.map((v, i) => `${i === 0 ? 'M' : 'L'} ${(i / (values.length - 1)) * 300} ${100 - v * 0.9}`).join(' ');
 
+function Eyebrow({ index, children }: { index: string; children: string }) {
+    return (
+        <p className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 mb-6">
+            <span className="text-zinc-300">{index}</span>
+            <span className="w-8 h-px bg-zinc-700" />
+            {children}
+        </p>
+    );
+}
+
 export default function PlatformSections() {
     const handleClick = (destination: string, location: string) => {
         trackEvent('Navigation Clicked', {
@@ -64,46 +72,38 @@ export default function PlatformSections() {
     return (
         <div className="relative text-white">
             {/* Capabilities */}
-            <section id="platform" className="relative px-4 md:px-8 py-24 md:py-32 bg-black/90 backdrop-blur-sm border-t border-white/10 overflow-hidden">
-                <div className="absolute inset-0 bg-grid pointer-events-none" />
-                <div className="relative max-w-7xl mx-auto">
-                    <p className="text-xs tracking-[0.3em] uppercase text-gray-400 mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                        What We Build
-                    </p>
-                    <h2 className="text-3xl md:text-6xl font-bold mb-6 max-w-5xl leading-tight" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                        One engineering team.{' '}
-                        <span className="bg-gradient-to-r from-violet-400 via-emerald-300 to-sky-400 bg-clip-text text-transparent">
-                            A full stack of African infrastructure.
-                        </span>
-                    </h2>
-                    <p className="text-gray-400 text-lg md:text-xl max-w-3xl mb-16">
-                        StdioX Labs builds and runs the products businesses depend on — how they sell tickets, get paid,
-                        lend, stay safe from fraud and talk to their customers. And for event organizers, we put up the capital too.
-                    </p>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <section id="platform" className="relative px-4 md:px-8 py-28 md:py-40 scroll-mt-24">
+                <div className="max-w-7xl mx-auto">
+                    <div data-reveal className="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:items-end mb-16 md:mb-20">
+                        <div>
+                            <Eyebrow index="01">What we build</Eyebrow>
+                            <h2 className="text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                                One engineering team.{' '}
+                                <span className="text-zinc-500">A full stack of African infrastructure.</span>
+                            </h2>
+                        </div>
+                        <p className="text-zinc-400 text-lg leading-relaxed">
+                            The products businesses depend on to sell tickets, get paid, lend, stay safe from fraud and talk to
+                            their customers. And for event organizers, we put up the capital too.
+                        </p>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {capabilities.map((item, index) => (
                             <Link
                                 key={item.title}
                                 href={item.href}
                                 onClick={() => handleClick(item.title, 'Capabilities')}
-                                className="group relative p-8 rounded-2xl border border-white/15 bg-white/[0.03] hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                                data-reveal
+                                style={{ transitionDelay: `${index * 90}ms` }}
+                                className="glass group flex flex-col rounded-[1.75rem] p-7 min-h-[300px] hover:-translate-y-1.5"
                             >
-                                <div className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${item.accent[0]}, ${item.accent[1]})` }} />
-                                <div
-                                    className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"
-                                    style={{ background: item.accent[0] }}
-                                />
-                                <div
-                                    className="text-4xl font-bold mb-8 bg-clip-text text-transparent"
-                                    style={{ fontFamily: 'var(--font-orbitron)', backgroundImage: `linear-gradient(135deg, ${item.accent[0]}, ${item.accent[1]})` }}
-                                >
-                                    0{index + 1}
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                    {item.title}
-                                </h3>
-                                <p className="text-gray-400 leading-relaxed">{item.body}</p>
-                                <span className="inline-block mt-6 text-sm text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all">Explore →</span>
+                                <span className="font-mono text-xs text-zinc-500">0{index + 1}</span>
+                                <h3 className="mt-auto text-xl font-medium tracking-tight mb-3">{item.title}</h3>
+                                <p className="text-zinc-400 text-sm leading-relaxed">{item.body}</p>
+                                <span className="mt-6 grid place-items-center w-10 h-10 rounded-full border border-white/15 text-zinc-300 group-hover:bg-white group-hover:text-black group-hover:rotate-[-45deg] transition-all duration-500">
+                                    →
+                                </span>
                             </Link>
                         ))}
                     </div>
@@ -111,143 +111,164 @@ export default function PlatformSections() {
             </section>
 
             {/* Rails Marquee */}
-            <section className="relative py-8 bg-black border-y border-white/10 overflow-hidden" aria-label="Rails and channels we integrate">
-                <div className="flex w-max animate-marquee">
-                    {[...rails, ...rails].map((rail, i) => (
-                        <span
-                            key={i}
-                            className="mx-8 text-xl md:text-2xl font-bold text-white/25 whitespace-nowrap"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            {rail}
-                        </span>
-                    ))}
-                </div>
-            </section>
-
-            {/* Flagship Products */}
-            <section className="relative px-4 md:px-8 py-24 md:py-32 bg-black overflow-hidden">
-                <div className="relative max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-20">
-                        <div>
-                            <p className="text-xs tracking-[0.3em] uppercase text-gray-400 mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                Products
-                            </p>
-                            <h2 className="text-3xl md:text-6xl font-bold" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                Built. Shipped. Running.
-                            </h2>
-                        </div>
-                        <Link
-                            href="/products"
-                            onClick={() => handleClick('Products', 'Flagship Products')}
-                            className="self-start md:self-auto px-6 py-3 border border-white/30 hover:border-white rounded-full text-sm hover:bg-white/10 transition-all duration-300"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            All Products →
-                        </Link>
-                    </div>
-
-                    <div className="space-y-28 md:space-y-40">
-                        {productCategories.map((category, index) => (
-                            <div key={category.id}>
-                                <p
-                                    className="text-xs tracking-[0.3em] uppercase mb-10 font-semibold"
-                                    style={{ fontFamily: 'var(--font-orbitron)', color: category.accent[0] }}
-                                >
-                                    {category.label}
-                                </p>
-                                <ProductShowcase product={category.products[0]} accent={category.accent} reverse={index % 2 === 1} page="Home" />
-                                <div className="flex flex-wrap gap-3 mt-12">
-                                    <span className="text-gray-500 text-sm py-2">Also in {category.label}:</span>
-                                    {category.products.slice(1).map((product) => (
-                                        <Link
-                                            key={product.id}
-                                            href={`/products#${product.id}`}
-                                            onClick={() => handleClick(product.name, 'Flagship Products')}
-                                            className="px-4 py-2 rounded-full border border-white/15 text-sm text-gray-300 hover:text-white hover:border-white/40 transition-colors"
-                                        >
-                                            {product.name} →
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
+            <section className="relative px-4 md:px-8" aria-label="Rails and channels we integrate">
+                <div data-reveal className="glass max-w-7xl mx-auto rounded-full py-5 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+                    <div className="flex w-max animate-marquee">
+                        {[...rails, ...rails].map((rail, i) => (
+                            <span key={i} className="flex items-center gap-10 mx-5 text-lg md:text-xl font-medium tracking-tight text-zinc-400 whitespace-nowrap">
+                                {rail}
+                                <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                            </span>
                         ))}
                     </div>
                 </div>
             </section>
 
+            {/* Products */}
+            <section className="relative px-4 md:px-8 py-28 md:py-40">
+                <div className="max-w-7xl mx-auto">
+                    <div data-reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
+                        <div>
+                            <Eyebrow index="02">Products</Eyebrow>
+                            <h2 className="text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                                Built. Shipped. <span className="text-zinc-500">Running.</span>
+                            </h2>
+                        </div>
+                        <MagneticLink
+                            href="/products"
+                            onClick={() => handleClick('Products', 'Flagship Products')}
+                            className="glass self-start md:self-auto inline-flex items-center gap-3 px-6 py-3 rounded-full text-sm"
+                        >
+                            All products <span>→</span>
+                        </MagneticLink>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+                        {productCategories.map((category, index) => {
+                            const [flagship, ...others] = category.products;
+                            const flagshipHref = flagship.url ?? `/products#${flagship.id}`;
+                            return (
+                                <article
+                                    key={category.id}
+                                    data-reveal
+                                    style={{ transitionDelay: `${index * 120}ms` }}
+                                    className="glass flex flex-col rounded-[2rem] p-3"
+                                >
+                                    <a
+                                        href={flagshipHref}
+                                        target={flagship.url ? '_blank' : undefined}
+                                        rel={flagship.url ? 'noopener noreferrer' : undefined}
+                                        onClick={() => trackEvent('Product Clicked', { product_name: flagship.name, product_url: flagshipHref, page: 'Home' })}
+                                        className="group block rounded-[1.6rem] p-5 hover:bg-white/[0.03] transition-colors"
+                                    >
+                                        <div className="flex items-center justify-between mb-5">
+                                            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">{category.label}</span>
+                                            <span className="text-[10px] uppercase tracking-widest text-zinc-300 border border-white/15 rounded-full px-2.5 py-1">
+                                                {statusLabels[flagship.status]}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">{flagship.name}</h3>
+                                        <p className="text-zinc-400 mt-1 mb-6">{flagship.tagline}</p>
+                                        <div className="group-hover:-translate-y-1 transition-transform duration-500">
+                                            <ProductVisual productId={flagship.id} accent={chrome} />
+                                        </div>
+                                    </a>
+                                    <div className="mt-auto pt-2">
+                                        {others.map((product) => (
+                                            <Link
+                                                key={product.id}
+                                                href={`/products#${product.id}`}
+                                                onClick={() => handleClick(product.name, 'Flagship Products')}
+                                                className="group flex items-center justify-between gap-4 rounded-2xl px-5 py-4 border-t border-white/[0.07] hover:bg-white/[0.05] transition-colors"
+                                            >
+                                                <div className="min-w-0">
+                                                    <p className="text-sm text-white">{product.name}</p>
+                                                    <p className="text-xs text-zinc-500 truncate">{product.tagline}</p>
+                                                </div>
+                                                <span className="text-zinc-500 group-hover:text-white group-hover:translate-x-1 transition-all">→</span>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
             {/* Funding */}
-            <section className="relative px-4 md:px-8 py-24 md:py-32 overflow-hidden text-black bg-gradient-to-br from-violet-300 via-fuchsia-200 to-amber-100">
-                <div className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <section className="relative px-4 md:px-8 pb-28 md:pb-40">
+                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2.5rem] p-6 md:p-14 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div>
-                        <p className="text-xs tracking-[0.3em] uppercase text-black/60 mb-4 font-semibold" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Funding
-                        </p>
-                        <h2 className="text-3xl md:text-6xl font-bold mb-6 leading-tight" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            We don&apos;t just sell the tickets. We fund the event.
+                        <Eyebrow index="03">Funding</Eyebrow>
+                        <h2 className="text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.05] mb-6">
+                            We sell the tickets. <span className="text-zinc-500">We fund the event.</span>
                         </h2>
-                        <p className="text-black/70 text-lg leading-relaxed mb-10">
+                        <p className="text-zinc-400 text-lg leading-relaxed mb-10">
                             Event prefinancing advances the venue deposit, artist fee and marketing budget before a single
                             ticket sells — repaid automatically from ticket revenue. No collateral, no separate repayment
                             schedule. Our V2 capital pool is sized for stadium shows, not just club nights.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Link
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <MagneticLink
                                 href="/funding"
                                 onClick={() => handleClick('Funding', 'Funding Section')}
-                                className="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105 text-center"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
+                                className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-zinc-100 text-black font-medium hover:bg-white"
                             >
-                                How Prefinancing Works
-                            </Link>
-                            <Link
+                                How prefinancing works
+                            </MagneticLink>
+                            <MagneticLink
                                 href="/contact"
                                 onClick={() => handleClick('Contact', 'Funding Section')}
-                                className="px-8 py-4 border-2 border-black rounded-full font-semibold hover:bg-black/5 transition-all duration-300 hover:scale-105 text-center"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
+                                className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border border-white/20 font-medium hover:bg-white/10"
                             >
-                                Talk to Us
-                            </Link>
+                                Talk to us
+                            </MagneticLink>
                         </div>
                     </div>
 
                     {/* Cash position chart */}
-                    <div className="rounded-3xl bg-black text-white p-6 md:p-8 shadow-2xl">
+                    <div className="rounded-[1.75rem] bg-black/40 border border-white/10 p-6 md:p-8">
                         <div className="flex items-center justify-between mb-6">
-                            <p className="font-semibold" style={{ fontFamily: 'var(--font-orbitron)' }}>Organizer cash position</p>
-                            <p className="text-gray-500 text-xs">Illustrative</p>
+                            <p className="font-medium">Organizer cash position</p>
+                            <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Illustrative</p>
                         </div>
                         <svg viewBox="0 -10 300 200" className="w-full h-auto" role="img" aria-label="Cash position with and without prefinancing over the eight weeks before an event">
                             <defs>
                                 <linearGradient id="funded-line" x1="0" x2="1">
-                                    <stop offset="0" stopColor="#a78bfa" />
-                                    <stop offset="1" stopColor="#f472b6" />
+                                    <stop offset="0" stopColor="#71717a" />
+                                    <stop offset="1" stopColor="#ffffff" />
+                                </linearGradient>
+                                <linearGradient id="funded-fill" x1="0" x2="0" y1="0" y2="1">
+                                    <stop offset="0" stopColor="rgba(255,255,255,0.18)" />
+                                    <stop offset="1" stopColor="rgba(255,255,255,0)" />
                                 </linearGradient>
                             </defs>
-                            <line x1="0" x2="300" y1="100" y2="100" stroke="rgba(255,255,255,0.2)" strokeDasharray="4 4" />
-                            <path d={toPath(withoutFunding)} fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2.5" strokeLinejoin="round" />
-                            <path d={toPath(withFunding)} fill="none" stroke="url(#funded-line)" strokeWidth="3.5" strokeLinejoin="round" />
-                            <text x="0" y="185" fill="rgba(255,255,255,0.4)" fontSize="9">Week −8</text>
-                            <text x="300" y="185" fill="rgba(255,255,255,0.4)" fontSize="9" textAnchor="end">Event</text>
+                            <line x1="0" x2="300" y1="100" y2="100" stroke="rgba(255,255,255,0.15)" strokeDasharray="3 5" />
+                            <path d={`${toPath(withFunding)} L 300 100 L 0 100 Z`} fill="url(#funded-fill)" />
+                            <path d={toPath(withoutFunding)} pathLength={1} strokeDasharray="1" className="draw-path" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinejoin="round" />
+                            <path d={toPath(withFunding)} pathLength={1} strokeDasharray="1" className="draw-path" fill="none" stroke="url(#funded-line)" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+                            <text x="0" y="185" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace">WEEK −8</text>
+                            <text x="300" y="185" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace" textAnchor="end">EVENT</text>
                         </svg>
                         <div className="flex flex-wrap gap-6 mt-4 text-xs">
                             <span className="flex items-center gap-2">
-                                <span className="w-4 h-1 rounded-full bg-gradient-to-r from-violet-400 to-pink-400" /> With prefinancing
+                                <span className="w-4 h-0.5 rounded-full bg-white" /> With prefinancing
                             </span>
-                            <span className="flex items-center gap-2 text-gray-400">
-                                <span className="w-4 h-1 rounded-full bg-white/35" /> Out of your own pocket
+                            <span className="flex items-center gap-2 text-zinc-500">
+                                <span className="w-4 h-0.5 rounded-full bg-white/30" /> Out of your own pocket
                             </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-3 mt-8">
+                        <div className="grid grid-cols-3 gap-2 mt-8">
                             {[
                                 { step: 'Advance', body: 'Weeks before on-sale' },
                                 { step: 'Sell', body: 'M-Pesa, card, mobile money' },
                                 { step: 'Self-clear', body: 'Repaid from tickets' },
                             ].map((item, index) => (
-                                <div key={item.step} className="rounded-xl border border-white/10 p-3">
-                                    <p className="text-gray-500 text-[10px] mb-1" style={{ fontFamily: 'var(--font-orbitron)' }}>0{index + 1}</p>
-                                    <p className="font-semibold text-sm">{item.step}</p>
-                                    <p className="text-gray-500 text-xs mt-1">{item.body}</p>
+                                <div key={item.step} className="rounded-2xl bg-white/[0.04] border border-white/[0.07] p-3">
+                                    <p className="font-mono text-zinc-600 text-[10px] mb-1">0{index + 1}</p>
+                                    <p className="font-medium text-sm">{item.step}</p>
+                                    <p className="text-zinc-500 text-xs mt-1">{item.body}</p>
                                 </div>
                             ))}
                         </div>
@@ -256,63 +277,59 @@ export default function PlatformSections() {
             </section>
 
             {/* Engineering */}
-            <section className="relative px-4 md:px-8 py-24 md:py-32 bg-black border-t border-white/10 overflow-hidden">
-                <div className="absolute inset-0 bg-grid pointer-events-none" />
-                <div className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
-                    <div>
-                        <p className="text-xs tracking-[0.3em] uppercase text-gray-400 mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Under the Hood
-                        </p>
-                        <h2 className="text-3xl md:text-5xl font-bold mb-6" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Built from first principles. Run by us.
+            <section className="relative px-4 md:px-8 pb-28 md:pb-40">
+                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+                    <div data-reveal>
+                        <Eyebrow index="04">Under the hood</Eyebrow>
+                        <h2 className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-6">
+                            Built from first principles. <span className="text-zinc-500">Run by us.</span>
                         </h2>
-                        <p className="text-gray-400 text-lg leading-relaxed">
+                        <p className="text-zinc-400 text-lg leading-relaxed">
                             Every product shares the same engineering backbone — payment rails, identity, messaging and
                             infrastructure we design, deploy and operate ourselves. We also build custom platforms for
                             partners on the same stack.
                         </p>
                     </div>
-                    <ul className="grid sm:grid-cols-2 gap-4 content-start">
-                        {engineering.map((item, index) => {
-                            const accent = productCategories[index % productCategories.length].accent;
-                            return (
-                                <li key={item} className="flex items-start gap-3 p-5 rounded-xl border border-white/10 bg-white/[0.03]">
-                                    <span className="mt-1.5 w-2 h-2 rounded-full shrink-0" style={{ background: `linear-gradient(135deg, ${accent[0]}, ${accent[1]})` }} />
-                                    <span className="text-gray-300">{item}</span>
-                                </li>
-                            );
-                        })}
+                    <ul className="grid sm:grid-cols-2 gap-3 content-start">
+                        {engineering.map((item, index) => (
+                            <li
+                                key={item}
+                                data-reveal
+                                style={{ transitionDelay: `${index * 70}ms` }}
+                                className="glass flex items-start gap-4 rounded-2xl p-5"
+                            >
+                                <span className="font-mono text-xs text-zinc-600 mt-0.5">0{index + 1}</span>
+                                <span className="text-zinc-300">{item}</span>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </section>
 
             {/* CTA */}
-            <section className="relative px-4 md:px-8 py-28 bg-black border-t border-white/10 text-center overflow-hidden">
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] rounded-full blur-3xl opacity-20 pointer-events-none bg-gradient-to-r from-violet-500 via-emerald-400 to-sky-500" />
-                <div className="relative">
-                    <h2 className="text-3xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                        Let&apos;s build something exceptional.
+            <section className="relative px-4 md:px-8 pb-28">
+                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2.5rem] px-6 py-20 md:py-28 text-center overflow-hidden">
+                    <h2 className="text-4xl md:text-7xl font-semibold tracking-[-0.04em] leading-[1] mb-6">
+                        Let&apos;s build <span className="text-zinc-500">what&apos;s next.</span>
                     </h2>
-                    <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
+                    <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto">
                         Product demos, partnerships, event funding or a custom build — talk to the engineers directly.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <MagneticLink
                             href="/contact"
                             onClick={() => handleClick('Contact', 'Home CTA')}
-                            className="px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 hover:scale-105"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
+                            className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-zinc-100 text-black font-medium hover:bg-white"
                         >
-                            Get in Touch
-                        </Link>
-                        <Link
+                            Get in touch
+                        </MagneticLink>
+                        <MagneticLink
                             href="/about"
                             onClick={() => handleClick('About', 'Home CTA')}
-                            className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300 hover:scale-105"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
+                            className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-white/20 font-medium hover:bg-white/10"
                         >
-                            About Us
-                        </Link>
+                            About us
+                        </MagneticLink>
                     </div>
                 </div>
             </section>
