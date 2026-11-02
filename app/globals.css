@@ -169,6 +169,23 @@ body {
     opacity: 1;
   }
 
+  /* Editorial italic used for the accent half of headlines */
+  .serif-accent {
+    font-family: var(--font-instrument-serif), Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .gauge-fill {
+    stroke-dasharray: 0.78 1;
+    stroke-dashoffset: 0.78;
+  }
+
+  [data-reveal].is-revealed .gauge-fill {
+    animation: gauge 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  }
+
   .grain {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
@@ -274,6 +291,83 @@ body {
   }
 }
 
+@keyframes gauge {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bar {
+
+  0%,
+  100% {
+    transform: scaleY(0.55);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-bar {
+  transform-origin: bottom;
+  animation: bar 2.4s ease-in-out infinite;
+}
+
+@keyframes scan {
+  from {
+    transform: translateY(-120%);
+  }
+
+  to {
+    transform: translateY(420%);
+  }
+}
+
+.animate-scan {
+  animation: scan 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes flow {
+  0% {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+
+  20%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+.animate-flow {
+  animation: flow 1.8s ease-in-out infinite;
+}
+
+@keyframes typing {
+
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.animate-typing {
+  animation: typing 1.2s ease-in-out infinite;
+}
+
 @keyframes scroll-line {
   0% {
     transform: scaleY(0);
@@ -303,6 +397,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
 
   .animate-morph,
+  .animate-bar,
+  .animate-scan,
+  .animate-flow,
+  .animate-typing,
   .animate-rise,
   .animate-word-in,
   .animate-feed-in,
@@ -315,5 +413,13 @@ body {
     transform: none;
     filter: none;
     transition: none;
+  }
+
+  .gauge-fill {
+    stroke-dashoffset: 0;
+  }
+
+  [data-reveal].is-revealed .gauge-fill {
+    animation: none;
   }
 }

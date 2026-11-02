@@ -23,7 +23,7 @@ export default function ProductShowcase({ product, reverse = false, page }: Prod
         });
     };
 
-    const ctaClass = 'group inline-flex items-center gap-3 pl-6 pr-1.5 py-1.5 rounded-full bg-zinc-100 text-black font-medium hover:bg-white transition-colors';
+    const ctaClass = 'group inline-flex items-center gap-3 pl-6 pr-1.5 py-1.5 rounded-full bg-white text-black font-medium hover:bg-zinc-200 transition-colors';
     const ctaArrow = (
         <span className="grid place-items-center w-9 h-9 rounded-full bg-black text-white group-hover:rotate-[-45deg] transition-transform duration-300">→</span>
     );
@@ -33,13 +33,13 @@ export default function ProductShowcase({ product, reverse = false, page }: Prod
             id={product.id}
             data-reveal
             onMouseEnter={() => trackEvent('Product Hovered', { product_name: product.name, page: page })}
-            className="glass grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 lg:p-12 scroll-mt-28"
+            className="glass grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center rounded-[2rem] p-5 sm:p-8 lg:p-12 scroll-mt-28"
         >
             <div className={reverse ? 'lg:order-2' : ''}>
                 <span className="inline-block mb-5 text-[10px] uppercase tracking-widest text-zinc-300 border border-white/15 rounded-full px-2.5 py-1">
                     {statusLabels[product.status]}
                 </span>
-                <h3 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] mb-2">{product.name}</h3>
+                <h3 className="text-3xl md:text-4xl font-semibold tracking-[-0.025em] mb-2">{product.name}</h3>
                 <p className="text-lg md:text-xl text-zinc-500 mb-6">{product.tagline}</p>
                 <p className="text-zinc-300 text-base md:text-lg leading-relaxed mb-8">{product.description}</p>
                 <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-10">

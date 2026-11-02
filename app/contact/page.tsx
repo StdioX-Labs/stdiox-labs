@@ -34,8 +34,8 @@ const reasons = [
         body: "SoldOutAfrica, StdioX Comms, Pay, Looker, Score, CRM and Bookings — tell us which and we'll set up a walkthrough.",
     },
     {
-        title: 'Event funding',
-        body: "Share your date, venue, lineup and budget and we'll tell you what we can prefinance.",
+        title: 'Event prefinancing',
+        body: "Selling on SoldOutAfrica? Share your date, venue, lineup and budget and we'll tell you what we can prefinance.",
     },
     {
         title: 'Technical inquiries',
@@ -69,7 +69,7 @@ export default function ContactPage() {
                 eyebrow="Contact"
                 title="Let's build"
                 muted="something exceptional."
-                lead="Product demos, event funding, a custom build or a partnership — talk to the engineers directly."
+                lead="Product demos, a custom build or a partnership — talk to the engineers directly."
             />
 
             <div className="px-4 md:px-8 pb-16 md:pb-28">
@@ -85,7 +85,7 @@ export default function ContactPage() {
                                 onClick={() => handleContactClick(method.label, method.value)}
                                 data-reveal
                                 style={{ transitionDelay: `${index * 90}ms` }}
-                                className="glass group flex flex-col rounded-[1.75rem] p-6 md:p-8 hover:-translate-y-1"
+                                className="glass group flex flex-col rounded-3xl p-6 md:p-8 hover:-translate-y-1"
                             >
                                 <div className="flex items-center justify-between mb-10 md:mb-16">
                                     <span className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">{method.label}</span>
@@ -103,8 +103,8 @@ export default function ContactPage() {
                     <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-8 lg:gap-16">
                         <div data-reveal>
                             <Eyebrow index="01">Ready to start?</Eyebrow>
-                            <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-5">
-                                What we can <span className="text-zinc-500">help with.</span>
+                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-5">
+                                What we can <span className="serif-accent text-zinc-400">help with.</span>
                             </h2>
                             <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
                                 Office hours are Monday to Friday, 9:00 AM – 6:00 PM East Africa Time.
@@ -116,7 +116,7 @@ export default function ContactPage() {
                                     key={reason.title}
                                     data-reveal
                                     style={{ transitionDelay: `${index * 70}ms` }}
-                                    className="glass rounded-[1.5rem] p-6"
+                                    className="glass rounded-3xl p-6"
                                 >
                                     <h3 className="font-medium mb-2">{reason.title}</h3>
                                     <p className="text-zinc-400 text-sm leading-relaxed">{reason.body}</p>
@@ -129,7 +129,7 @@ export default function ContactPage() {
                     <section data-reveal className="text-center">
                         <p className="text-zinc-500 text-sm mb-6">Operating from Nairobi, building for Africa</p>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <MagneticLink href="/products" className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-zinc-100 text-black font-medium hover:bg-white">
+                            <MagneticLink href="/products" className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-white text-black font-medium hover:bg-zinc-200">
                                 View our work
                             </MagneticLink>
                             <MagneticLink href="/about" className="glass inline-flex items-center justify-center px-7 py-3.5 rounded-full font-medium">

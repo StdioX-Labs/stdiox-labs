@@ -146,12 +146,11 @@ export function GlassPage({ children }: { children: ReactNode }) {
 
 export function Eyebrow({ index, children }: { index?: string; children: string }) {
     return (
-        <p className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 mb-6">
-            {index && (
-                <>
-                    <span className="text-zinc-300">{index}</span>
-                    <span className="w-8 h-px bg-zinc-700" />
-                </>
+        <p className="flex items-center gap-2 text-sm text-zinc-400 mb-5">
+            {index ? (
+                <span className="tabular-nums text-zinc-500">{index} /</span>
+            ) : (
+                <span className="w-1.5 h-1.5 mr-1 rounded-full bg-zinc-300" />
             )}
             {children}
         </p>
@@ -174,13 +173,13 @@ export function PageHeader({ eyebrow, title, muted, lead, children }: PageHeader
                 <div className="animate-fade-up">
                     <Eyebrow>{eyebrow}</Eyebrow>
                 </div>
-                <h1 className="text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-[5.5rem] lg:leading-[1] font-semibold tracking-[-0.035em] max-w-5xl mb-8">
+                <h1 className="text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-[4rem] xl:text-[4.5rem] font-semibold tracking-[-0.03em] max-w-5xl mb-6">
                     <span className="block overflow-hidden pb-[0.08em]">
                         <span className="block animate-rise [animation-delay:100ms]">{title}</span>
                     </span>
                     {muted && (
                         <span className="block overflow-hidden pb-[0.08em]">
-                            <span className="block animate-rise text-zinc-500 [animation-delay:220ms]">{muted}</span>
+                            <span className="block animate-rise serif-accent text-zinc-400 [animation-delay:220ms]">{muted}</span>
                         </span>
                     )}
                 </h1>

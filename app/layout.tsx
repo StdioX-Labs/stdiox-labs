@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Orbitron } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif, Orbitron } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -13,6 +13,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
+
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
@@ -24,7 +31,7 @@ export const metadata: Metadata = {
     default: "StdioX Labs - Africa's Tech Powerhouse",
     template: "%s | StdioX Labs",
   },
-  description: "StdioX Labs engineers Africa's digital infrastructure: SoldOutAfrica ticketing, payments and fraud screening, core banking and credit scoring, SMS/Email/WhatsApp APIs, CRM, bookings — and event prefinancing.",
+  description: "StdioX Labs engineers Africa's digital infrastructure: SoldOutAfrica ticketing, payments and fraud screening, core banking and credit scoring, SMS/Email/WhatsApp APIs, CRM and bookings.",
   keywords: [
     "StdioX Labs",
     "African technology",
@@ -37,7 +44,6 @@ export const metadata: Metadata = {
     "SoldOutAfrica",
     "event ticketing",
     "event prefinancing",
-    "event funding",
     "payments",
     "fraud screening",
     "core banking",
@@ -68,7 +74,7 @@ export const metadata: Metadata = {
     url: "https://stdiox-labs.vercel.app",
     siteName: "StdioX Labs",
     title: "StdioX Labs - Africa's Tech Powerhouse",
-    description: "Ticketing, payments, lending, communications and event funding — engineered in Nairobi for Africa.",
+    description: "Ticketing, payments, lending and communications — engineered in Nairobi for Africa.",
     images: [
       {
         url: "/stdiox.png",
@@ -81,7 +87,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "StdioX Labs - Africa's Tech Powerhouse",
-    description: "Ticketing, payments, lending, communications and event funding — engineered in Nairobi for Africa.",
+    description: "Ticketing, payments, lending and communications — engineered in Nairobi for Africa.",
     images: ["/stdiox.png"],
     creator: "@stdiox_labs",
   },
@@ -120,7 +126,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${orbitron.variable} antialiased`}
       >
         {children}
       </body>

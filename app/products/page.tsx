@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
 import ProductShowcase from '../components/ProductShowcase';
 import { Eyebrow, GlassPage, MagneticLink, PageHeader } from '../components/LiquidGlass';
 import { productCategories } from '../data/products';
@@ -48,7 +47,7 @@ export default function ProductsPage() {
                         <div data-reveal className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-6 lg:items-end mb-10 md:mb-14">
                             <div>
                                 <Eyebrow index={`0${categoryIndex + 1}`}>{category.label.split(' ')[0]}</Eyebrow>
-                                <h2 className="text-[2.1rem] sm:text-5xl lg:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                                <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
                                     {category.label}
                                 </h2>
                             </div>
@@ -63,32 +62,6 @@ export default function ProductsPage() {
                 </section>
             ))}
 
-            {/* Funding callout */}
-            <section className="px-4 md:px-8 py-14 md:py-24">
-                <Link
-                    href="/funding"
-                    data-reveal
-                    onClick={() => trackEvent('Product Clicked', { product_name: 'Event Prefinancing', product_url: '/funding', page: 'Products' })}
-                    className="glass group block max-w-7xl mx-auto rounded-[2rem] md:rounded-[2.5rem] p-6 sm:p-10 md:p-14"
-                >
-                    <Eyebrow>Funding</Eyebrow>
-                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-                        <div>
-                            <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-4">
-                                We prefinance events.
-                            </h2>
-                            <p className="text-zinc-400 text-base md:text-lg max-w-2xl">
-                                Venue deposits, artist advances and marketing — fronted from a dedicated capital pool and repaid
-                                automatically from ticket sales.
-                            </p>
-                        </div>
-                        <span className="shrink-0 grid place-items-center w-14 h-14 rounded-full bg-zinc-100 text-black text-xl group-hover:rotate-[-45deg] transition-transform duration-500">
-                            →
-                        </span>
-                    </div>
-                </Link>
-            </section>
-
             {/* Bottom CTA */}
             <section className="px-4 md:px-8 pb-16 md:pb-28 text-center">
                 <div data-reveal>
@@ -96,7 +69,7 @@ export default function ProductsPage() {
                         Need something we haven&apos;t built yet? We build custom platforms on the same stack.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <MagneticLink href="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-zinc-100 text-black font-medium hover:bg-white">
+                        <MagneticLink href="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-zinc-200">
                             Get in touch
                         </MagneticLink>
                         <MagneticLink href="/about" className="glass inline-flex items-center justify-center px-8 py-4 rounded-full font-medium">

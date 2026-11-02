@@ -46,8 +46,8 @@ export default function AboutPage() {
                     <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-8 lg:gap-16">
                         <div data-reveal>
                             <Eyebrow index="01">Origin</Eyebrow>
-                            <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
-                                Engineering <span className="text-zinc-500">first.</span>
+                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                                Engineering <span className="serif-accent text-zinc-400">first.</span>
                             </h2>
                         </div>
                         <div data-reveal className="space-y-6 text-zinc-300 leading-relaxed text-base md:text-lg">
@@ -69,8 +69,8 @@ export default function AboutPage() {
                     <section>
                         <div data-reveal>
                             <Eyebrow index="02">How we work</Eyebrow>
-                            <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-10 md:mb-14">
-                                Four principles. <span className="text-zinc-500">No exceptions.</span>
+                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-10 md:mb-14">
+                                Four principles. <span className="serif-accent text-zinc-400">No exceptions.</span>
                             </h2>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -79,7 +79,7 @@ export default function AboutPage() {
                                     key={item.title}
                                     data-reveal
                                     style={{ transitionDelay: `${index * 90}ms` }}
-                                    className="glass flex flex-col rounded-[1.75rem] p-6 md:p-7 lg:min-h-[280px]"
+                                    className="glass flex flex-col rounded-3xl p-6 md:p-7 lg:min-h-[280px]"
                                 >
                                     <span className="font-mono text-xs text-zinc-500">0{index + 1}</span>
                                     <h3 className="mt-8 lg:mt-auto text-xl font-medium tracking-tight mb-3">{item.title}</h3>
@@ -90,11 +90,11 @@ export default function AboutPage() {
                     </section>
 
                     {/* Mission */}
-                    <section data-reveal className="glass rounded-[2rem] md:rounded-[2.5rem] p-6 sm:p-10 md:p-16">
+                    <section data-reveal className="glass rounded-[2rem] p-6 sm:p-10 md:p-16">
                         <Eyebrow>Mission</Eyebrow>
                         <blockquote className="text-2xl sm:text-3xl md:text-5xl font-medium tracking-[-0.02em] leading-[1.2] max-w-5xl">
                             &ldquo;Africa&apos;s digital transformation will be built by those who understand both the technology
-                            and the terrain. <span className="text-zinc-500">We are those engineers.&rdquo;</span>
+                            and the terrain. <span className="serif-accent text-zinc-400">We are those engineers.&rdquo;</span>
                         </blockquote>
                     </section>
 
@@ -102,8 +102,8 @@ export default function AboutPage() {
                     <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-8 lg:gap-16">
                         <div data-reveal>
                             <Eyebrow index="03">Our team</Eyebrow>
-                            <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
-                                Engineers, <span className="text-zinc-500">every one of us.</span>
+                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                                Engineers, <span className="serif-accent text-zinc-400">every one of us.</span>
                             </h2>
                         </div>
                         <div data-reveal className="space-y-6 text-zinc-300 leading-relaxed text-base md:text-lg">
@@ -125,11 +125,11 @@ export default function AboutPage() {
 
                     {/* CTA */}
                     <section data-reveal className="text-center">
-                        <h2 className="text-[2.4rem] sm:text-6xl font-semibold tracking-[-0.04em] leading-[1] mb-10">
-                            Join <span className="text-zinc-500">us.</span>
+                        <h2 className="text-[2.25rem] sm:text-5xl lg:text-6xl font-semibold tracking-[-0.04em] leading-[1] mb-10">
+                            Join <span className="serif-accent text-zinc-400">us.</span>
                         </h2>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <MagneticLink href="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-zinc-100 text-black font-medium hover:bg-white">
+                            <MagneticLink href="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-zinc-200">
                                 Get in touch
                             </MagneticLink>
                             <MagneticLink href="/products" className="glass inline-flex items-center justify-center px-8 py-4 rounded-full font-medium">

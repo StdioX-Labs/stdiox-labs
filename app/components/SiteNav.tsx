@@ -21,8 +21,8 @@ export default function SiteNav() {
     };
 
     return (
-        <nav className="fixed top-3 md:top-5 inset-x-0 z-50 px-3 md:px-6">
-            <div className="glass mx-auto max-w-5xl rounded-[1.75rem] bg-black/30">
+        <nav className="fixed top-3 md:top-5 inset-x-0 z-50 px-4 md:px-8">
+            <div className="glass mx-auto max-w-7xl rounded-3xl bg-black/40">
                 <div className="flex items-center justify-between pl-5 pr-2 py-2">
                     <Link href="/" className="relative" onClick={() => handleNavigationClick('Home')}>
                         <Image
@@ -56,7 +56,7 @@ export default function SiteNav() {
                         <Link
                             href="/contact"
                             onClick={() => handleNavigationClick('Contact CTA')}
-                            className="ml-2 px-5 py-2 rounded-full text-sm font-medium bg-zinc-100 text-black hover:bg-white transition-colors"
+                            className="ml-2 px-5 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-zinc-200 transition-colors"
                         >
                             Book a demo
                         </Link>

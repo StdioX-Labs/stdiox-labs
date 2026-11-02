@@ -117,6 +117,41 @@ function WhiteLabelStore({ accent }: { accent: Accent }) {
     );
 }
 
+function PrefinancingAdvance({ accent }: { accent: Accent }) {
+    const recovered = 68;
+    return (
+        <Window title="organiser.soldoutafrica.com · prefinancing" accent={accent}>
+            <div className="flex items-start justify-between mb-4">
+                <div>
+                    <p className="text-gray-500 text-[10px] uppercase tracking-widest">Advance · Summer Series</p>
+                    <p className="text-2xl font-bold text-white mt-1">KES 2,400,000</p>
+                </div>
+                <span className="px-2 py-1 rounded-full text-[10px] font-semibold text-black" style={{ background: gradient(accent) }}>
+                    APPROVED
+                </span>
+            </div>
+            <div className="space-y-2 mb-5">
+                {[
+                    ['Venue deposit', 'KES 900,000'],
+                    ['Artist advance', 'KES 1,100,000'],
+                    ['Marketing', 'KES 400,000'],
+                ].map(([item, amount]) => (
+                    <div key={item} className="flex justify-between rounded-lg border border-white/10 px-3 py-2">
+                        <span>{item}</span>
+                        <span className="text-white">{amount}</span>
+                    </div>
+                ))}
+            </div>
+            <div className="flex justify-between mb-1">
+                <span>Recovered from ticket sales</span>
+                <span className="text-gray-500">{recovered}%</span>
+            </div>
+            <Meter value={recovered} accent={accent} />
+            <p className="mt-4 text-[10px] text-gray-500">Repayment clears automatically before settlement</p>
+        </Window>
+    );
+}
+
 function TicketingApi({ accent }: { accent: Accent }) {
     return (
         <Window title="POST /v1/orders" accent={accent}>
@@ -335,6 +370,7 @@ function BookingsCalendar({ accent }: { accent: Accent }) {
 
 const visuals: Record<string, (props: { accent: Accent }) => ReactNode> = {
     soldoutafrica: TicketingDashboard,
+    prefinancing: PrefinancingAdvance,
     'white-label': WhiteLabelStore,
     'ticketing-api': TicketingApi,
     pay: PayCheckout,

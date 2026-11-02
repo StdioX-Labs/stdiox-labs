@@ -50,6 +50,21 @@ export const productCategories: ProductCategory[] = [
                 ],
             },
             {
+                id: 'prefinancing',
+                name: 'Event Prefinancing',
+                tagline: 'Fund the Event Before It Sells',
+                description:
+                    'A SoldOutAfrica offering for organizers selling on the platform. Venue deposits, artist advances and marketing budgets are advanced before on-sale and repaid automatically from ticket revenue as it comes in.',
+                url: 'https://soldoutafrica.com/',
+                status: 'live',
+                features: [
+                    'Venue, artist and marketing advances',
+                    'Repaid automatically from ticket sales',
+                    'Assessed on the event, no collateral',
+                    'Sized for stadium shows, not just club nights',
+                ],
+            },
+            {
                 id: 'white-label',
                 name: 'White-Label Ticketing',
                 tagline: 'Your Brand. Our Engine.',
