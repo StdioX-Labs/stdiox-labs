@@ -16,7 +16,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#0b0b0d]">
+    <div className="relative min-h-screen overflow-x-clip bg-[#0b0b0d]">
       <LiquidScene />
       <div className="relative z-10">
         <HeroSection />

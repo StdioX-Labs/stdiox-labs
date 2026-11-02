@@ -1,34 +1,129 @@
 'use client';
 
+import { useEffect, useState, type ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { StackDiagram } from './HomeVisuals';
+import ProductVisual from './ProductVisual';
+import { KeypadDots, RackDots, SpikeDots } from './HomeVisuals';
 import { Eyebrow } from './LiquidGlass';
 import { buttonPrimary, buttonSecondary } from './ui';
-import { allProducts, productCategories, statusLabels } from '../data/products';
+import { allProducts, statusLabels, type Product } from '../data/products';
 import { trackEvent } from '../utils/mixpanel';
 
 const soldOutAfrica = allProducts.find((product) => product.id === 'soldoutafrica');
 
-const stackLayers = [
+// One product from each area, shown in the tabbed showcase.
+const showcase = ['soldoutafrica', 'pay', 'looker', 'score', 'comms']
+    .map((id) => allProducts.find((product) => product.id === id))
+    .filter((product): product is Product => Boolean(product));
+
+const TAB_DURATION = 7000;
+
+// Neutral chrome accent so the product mockups sit inside the gray theme.
+const chrome: [string, string] = ['#f4f4f5', '#71717a'];
+
+const engineeringSpecs = [
+    { label: 'Backends', value: 'Java 21 and Spring Boot, Python and FastAPI' },
+    { label: 'Data', value: 'PostgreSQL, Redis, RabbitMQ' },
+    { label: 'Hosting', value: 'Kubernetes we run ourselves on Talos Linux, with MetalLB and continuous deploys' },
+    { label: 'Identity', value: 'Passkeys (WebAuthn) and single sign-on' },
+    { label: 'Channels', value: 'M-Pesa, cards with 3-D Secure, USSD, SMS, email and WhatsApp' },
+    { label: 'AI', value: 'WhatsApp agents on DeepSeek, Claude, GPT-4o or Gemini that call your own APIs' },
+    { label: 'Verification', value: 'Face detection and landmark matching for KYC' },
+];
+
+const engineeringNotes: { title: string; body: string; visual: ReactNode }[] = [
     {
-        name: 'Products',
-        description: 'What customers use',
-        items: allProducts.map((product) => product.name.replace('StdioX ', '')),
+        title: 'We run our own cloud',
+        body: 'Production runs on Kubernetes clusters we operate ourselves, so we control capacity, cost and every deploy.',
+        visual: <RackDots />,
     },
     {
-        name: 'Shared services',
-        description: 'Built once, used by every product',
-        items: ['M-Pesa, Pesapal, Paystack and card rails', 'Realtime settlement and split payouts', 'Single sign-on', 'SMS, email and WhatsApp', 'Audit trails on money movements'],
+        title: 'Built for on-sale spikes',
+        body: 'Ticket checkout holds when thousands of buyers arrive in the same minute an event goes on sale.',
+        visual: <SpikeDots />,
     },
     {
-        name: 'Infrastructure',
-        description: 'Run by us',
-        items: ['Kubernetes on our own clusters', 'Sized for on-sale traffic peaks'],
+        title: 'Works without a smartphone',
+        body: 'USSD sits alongside web, app and WhatsApp, for customers on feature phones.',
+        visual: <KeypadDots />,
     },
 ];
 
-const sectionHeading = 'text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]';
+const sectionHeading = 'text-[2.25rem] sm:text-5xl lg:text-[3.5rem] font-medium tracking-[-0.035em] leading-[1.04]';
+
+/** A list of products on the left and the selected product's interface on the right. It advances on its own until hovered. */
+function ProductTabs({ onNavigate }: { onNavigate: (name: string) => void }) {
+    const [active, setActive] = useState(0);
+    const [paused, setPaused] = useState(false);
+
+    useEffect(() => {
+        if (paused) return;
+        const timeout = setTimeout(() => setActive((current) => (current + 1) % showcase.length), TAB_DURATION);
+        return () => clearTimeout(timeout);
+    }, [active, paused]);
+
+    const product = showcase[active];
+
+    return (
+        <div
+            className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start"
+            onPointerEnter={() => setPaused(true)}
+            onPointerLeave={() => setPaused(false)}
+        >
+            <ol className="lg:col-span-5">
+                {showcase.map((item, index) => {
+                    const isActive = index === active;
+                    return (
+                        <li key={item.id} className="relative border-t border-white/10 last:border-b">
+                            {isActive && (
+                                <span
+                                    key={active}
+                                    className="absolute left-0 right-0 -top-px h-px bg-white origin-left"
+                                    style={{ animation: `tab-progress ${TAB_DURATION}ms linear forwards`, animationPlayState: paused ? 'paused' : 'running' }}
+                                />
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => setActive(index)}
+                                aria-expanded={isActive}
+                                className={`flex w-full items-center gap-3 py-5 text-left text-lg transition-colors cursor-pointer ${isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            >
+                                <span className={`w-1.5 h-1.5 rounded-full transition-colors ${isActive ? 'bg-brand' : 'bg-zinc-700'}`} />
+                                {item.name}
+                                <span className="ml-auto text-xs text-zinc-600">{statusLabels[item.status]}</span>
+                            </button>
+                            <div className={`grid transition-[grid-template-rows] duration-500 ease-out ${isActive ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+                                <div className="overflow-hidden">
+                                    <p className="pl-[18px] pr-4 text-sm text-zinc-400 leading-relaxed">{item.description}</p>
+                                    <Link
+                                        href={`/products#${item.id}`}
+                                        onClick={() => onNavigate(item.name)}
+                                        tabIndex={isActive ? 0 : -1}
+                                        className="inline-block pl-[18px] pt-3 pb-6 text-sm text-white underline decoration-white/30 underline-offset-4 hover:decoration-brand"
+                                    >
+                                        More about {item.name}
+                                    </Link>
+                                </div>
+                            </div>
+                        </li>
+                    );
+                })}
+            </ol>
+
+            <div className="lg:col-span-7 lg:sticky lg:top-28">
+                <div className="glass rounded-[2rem] p-4 sm:p-6 md:p-10 min-h-[360px] md:min-h-[460px] flex flex-col justify-center">
+                    <div key={product.id} className="animate-fade-up">
+                        <ProductVisual productId={product.id} accent={chrome} />
+                    </div>
+                </div>
+                <p className="mt-4 text-sm text-zinc-500">
+                    {product.name} · {product.tagline}
+                </p>
+            </div>
+        </div>
+    );
+}
 
 export default function PlatformSections() {
     const handleClick = (destination: string, location: string) => {
@@ -41,54 +136,33 @@ export default function PlatformSections() {
 
     return (
         <div className="relative text-white">
-            {/* Product index */}
-            <section id="platform" className="px-4 md:px-8 py-16 md:py-28 scroll-mt-24">
+            {/* Products */}
+            <section id="platform" className="px-4 md:px-8 py-20 md:py-32 scroll-mt-24">
                 <div className="max-w-7xl mx-auto">
-                    <div data-reveal className="grid lg:grid-cols-12 gap-6 lg:gap-8 lg:items-end mb-10 md:mb-14">
-                        <div className="lg:col-span-7">
+                    <div data-reveal className="grid lg:grid-cols-12 gap-6 lg:gap-16 lg:items-end mb-12 md:mb-16">
+                        <div className="lg:col-span-5">
                             <Eyebrow>products</Eyebrow>
                             <h2 className={sectionHeading}>What we make</h2>
                         </div>
-                        <p className="lg:col-span-5 text-zinc-400 text-base md:text-lg leading-relaxed">
-                            Every product is built and run by the same team in Nairobi. Some are open to any business; others we set
-                            up with you.
-                        </p>
+                        <div className="lg:col-span-7 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                            <p className="text-zinc-400 text-base md:text-lg leading-relaxed max-w-md">
+                                {allProducts.length} products across ticketing, payments and messaging, all built and run by the same
+                                team in Nairobi.
+                            </p>
+                            <Link href="/products" onClick={() => handleClick('Products', 'Product Showcase')} className={`${buttonSecondary} shrink-0`}>
+                                All products
+                            </Link>
+                        </div>
                     </div>
-
-                    <div className="space-y-4">
-                        {productCategories.map((category) => (
-                            <div key={category.id} data-reveal className="glass rounded-3xl overflow-hidden">
-                                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6 px-6 md:px-8 pt-6 pb-4">
-                                    <h3 className="text-white font-medium">{category.label}</h3>
-                                    <p className="text-sm text-zinc-500 sm:text-right max-w-md">{category.summary}</p>
-                                </div>
-                                <ul className="divide-y divide-white/[0.07] border-t border-white/[0.07]">
-                                    {category.products.map((product) => (
-                                        <li key={product.id}>
-                                            <Link
-                                                href={`/products#${product.id}`}
-                                                onClick={() => handleClick(product.name, 'Product Index')}
-                                                className="group grid grid-cols-[1fr_auto] md:grid-cols-[14rem_1fr_7rem_1.5rem] items-center gap-x-6 gap-y-1 px-6 md:px-8 py-4 hover:bg-white/[0.04] transition-colors"
-                                            >
-                                                <span className="text-white">{product.name}</span>
-                                                <span className="order-3 md:order-none col-span-2 md:col-span-1 text-sm text-zinc-400">{product.tagline}</span>
-                                                <span className="hidden md:block text-xs text-zinc-500">{statusLabels[product.status]}</span>
-                                                <span className="text-zinc-600 group-hover:text-brand transition-colors" aria-hidden="true">
-                                                    →
-                                                </span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+                    <div data-reveal>
+                        <ProductTabs onNavigate={(name) => handleClick(name, 'Product Showcase')} />
                     </div>
                 </div>
             </section>
 
             {/* SoldOutAfrica */}
             {soldOutAfrica && (
-                <section className="px-4 md:px-8 pb-16 md:pb-28">
+                <section className="px-4 md:px-8 pb-20 md:pb-32">
                     <div data-reveal className="glass max-w-7xl mx-auto rounded-[2rem] p-4 md:p-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                         <div className="lg:col-span-5 overflow-hidden rounded-[1.25rem] bg-black">
                             <Image
@@ -126,55 +200,69 @@ export default function PlatformSections() {
                 </section>
             )}
 
-            {/* Stack */}
-            <section className="px-4 md:px-8 pb-16 md:pb-28">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
-                    <div data-reveal className="lg:col-span-4">
-                        <Eyebrow>how it fits together</Eyebrow>
-                        <h2 className={`${sectionHeading} mb-5`}>One stack under every product</h2>
-                        <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
-                            Payments, identity, messaging and hosting are built once and shared. We also build custom platforms for
-                            partners on the same stack.
-                        </p>
-                    </div>
-                    <div data-reveal className="lg:col-span-8">
-                        <StackDiagram layers={stackLayers} />
-                    </div>
-                </div>
-            </section>
-
-            {/* Contact */}
-            <section className="px-4 md:px-8 pb-16 md:pb-28">
-                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2rem] p-6 md:p-12 grid lg:grid-cols-12 gap-10 lg:gap-12 lg:items-end">
-                    <div className="lg:col-span-6">
-                        <Eyebrow>contact</Eyebrow>
-                        <h2 className={`${sectionHeading} mb-5`}>Talk to the team</h2>
-                        <p className="text-zinc-400 text-base md:text-lg leading-relaxed max-w-md">
-                            Demos, partnerships and custom builds. You&apos;ll be speaking to the engineers who build the products.
-                        </p>
-                    </div>
-                    <div className="lg:col-span-6 space-y-2">
-                        <a
-                            href="mailto:info@stdiox.com"
-                            onClick={() => handleClick('Email', 'Home Contact')}
-                            className="group flex items-center justify-between gap-4 border-b border-white/10 py-4 text-xl md:text-2xl hover:text-zinc-300 transition-colors"
-                        >
-                            info@stdiox.com
-                            <span className="text-zinc-600 group-hover:text-brand transition-colors" aria-hidden="true">→</span>
-                        </a>
-                        <a
-                            href="tel:+254183053254"
-                            onClick={() => handleClick('Phone', 'Home Contact')}
-                            className="group flex items-center justify-between gap-4 border-b border-white/10 py-4 text-xl md:text-2xl hover:text-zinc-300 transition-colors"
-                        >
-                            +254 183 053 254
-                            <span className="text-zinc-600 group-hover:text-brand transition-colors" aria-hidden="true">→</span>
-                        </a>
-                        <div className="pt-6">
-                            <Link href="/contact" onClick={() => handleClick('Contact', 'Home Contact')} className={buttonPrimary}>
-                                Book a demo
-                            </Link>
+            {/* Engineering, on a light band */}
+            <section className="bg-[#ececee] text-zinc-900 px-4 md:px-8 py-20 md:py-32">
+                <div className="max-w-7xl mx-auto">
+                    <div data-reveal className="grid lg:grid-cols-12 gap-6 lg:gap-16 lg:items-end mb-12 md:mb-16">
+                        <div className="lg:col-span-5">
+                            <Eyebrow className="text-zinc-500">engineering</Eyebrow>
+                            <h2 className={sectionHeading}>How the products are built</h2>
                         </div>
+                        <p className="lg:col-span-7 text-zinc-600 text-base md:text-lg leading-relaxed max-w-xl">
+                            We write, host and operate everything ourselves. Here are some of the specifics.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                        {/* A real response from Looker */}
+                        <div data-reveal className="lg:col-span-7 rounded-3xl bg-[#111113] text-white overflow-hidden flex flex-col">
+                            <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-white/[0.08] text-sm">
+                                <span className="font-mono text-zinc-300">POST /v1/screen</span>
+                                <span className="text-zinc-500">Looker</span>
+                            </div>
+                            <pre className="flex-1 overflow-x-auto px-6 py-6 font-mono text-[13px] leading-relaxed text-zinc-400">
+                                {'{\n  '}
+                                <span className="text-zinc-500">&quot;decision&quot;</span>: <span className="text-brand">&quot;decline&quot;</span>
+                                {',\n  '}
+                                <span className="text-zinc-500">&quot;score&quot;</span>: <span className="text-white">79</span>
+                                {',\n  '}
+                                <span className="text-zinc-500">&quot;band&quot;</span>: <span className="text-white">&quot;high&quot;</span>
+                                {',\n  '}
+                                <span className="text-zinc-500">&quot;reasons&quot;</span>
+                                {': [\n    { '}
+                                <span className="text-zinc-500">&quot;code&quot;</span>: <span className="text-white">&quot;GEO_TRIPLE_MISMATCH&quot;</span>, <span className="text-zinc-500">&quot;points&quot;</span>: <span className="text-white">10.5</span>
+                                {' },\n    { '}
+                                <span className="text-zinc-500">&quot;code&quot;</span>: <span className="text-white">&quot;CVV_MISMATCH&quot;</span>, <span className="text-zinc-500">&quot;points&quot;</span>: <span className="text-white">8.96</span>
+                                {' }\n  ]\n}'}
+                            </pre>
+                            <p className="px-6 py-5 border-t border-white/[0.08] text-sm text-zinc-400 leading-relaxed">
+                                Looker screens every card payment before it reaches the acquirer and decides in milliseconds whether
+                                to approve, challenge with 3-D Secure or decline. Each decision comes with reason codes, plus the
+                                evidence needed to win a dispute.
+                            </p>
+                        </div>
+
+                        {/* Stack spec sheet */}
+                        <dl data-reveal className="lg:col-span-5 rounded-3xl bg-white divide-y divide-zinc-200">
+                            {engineeringSpecs.map((spec) => (
+                                <div key={spec.label} className="grid grid-cols-[6.5rem_1fr] gap-4 px-6 py-4">
+                                    <dt className="text-sm text-zinc-500">{spec.label}</dt>
+                                    <dd className="text-sm text-zinc-900 leading-relaxed">{spec.value}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        {engineeringNotes.map((note) => (
+                            <div key={note.title} data-reveal className="rounded-3xl bg-white p-3">
+                                <div className="aspect-[4/3] rounded-[1.25rem] bg-[#111113] p-6">{note.visual}</div>
+                                <div className="px-3 pt-5 pb-3">
+                                    <h3 className="font-medium text-zinc-900 mb-1.5">{note.title}</h3>
+                                    <p className="text-sm text-zinc-600 leading-relaxed">{note.body}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>

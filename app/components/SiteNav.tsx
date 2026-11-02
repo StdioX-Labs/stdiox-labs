@@ -22,7 +22,7 @@ export default function SiteNav() {
 
     return (
         <nav className="fixed top-3 md:top-5 inset-x-0 z-50 px-4 md:px-8">
-            <div className="glass mx-auto max-w-7xl rounded-3xl bg-black/40">
+            <div className="glass mx-auto max-w-7xl rounded-3xl bg-[#111113]/80">
                 <div className="flex items-center justify-between pl-5 pr-2 py-2">
                     <Link href="/" className="relative" onClick={() => handleNavigationClick('Home')}>
                         <Image

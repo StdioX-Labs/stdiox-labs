@@ -25,7 +25,7 @@ const principles = [
     },
 ];
 
-const sectionHeading = 'text-[2rem] sm:text-[2.75rem] font-semibold tracking-[-0.03em] leading-[1.05]';
+const sectionHeading = 'text-[2rem] sm:text-[2.75rem] font-medium tracking-[-0.03em] leading-[1.05]';
 
 export default function AboutPage() {
     useEffect(() => {

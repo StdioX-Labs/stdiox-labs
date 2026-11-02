@@ -35,7 +35,7 @@ export function LiquidScene() {
 /** Shell for inner pages: backdrop, floating nav and footer. */
 export function GlassPage({ children }: { children: ReactNode }) {
     return (
-        <div className="relative min-h-screen overflow-x-hidden bg-[#0b0b0d] text-white">
+        <div className="relative min-h-screen overflow-x-clip bg-[#0b0b0d] text-white">
             <LiquidScene />
             <div className="relative z-10">
                 <SiteNav />
@@ -47,9 +47,9 @@ export function GlassPage({ children }: { children: ReactNode }) {
 }
 
 /** Small section label, letter-spaced in lowercase like the wordmark, with a red dot from the X. */
-export function Eyebrow({ children }: { children: string }) {
+export function Eyebrow({ children, className = 'text-zinc-400' }: { children: string; className?: string }) {
     return (
-        <p className="flex items-center gap-2.5 mb-5 text-xs lowercase tracking-[0.25em] text-zinc-400">
+        <p className={`flex items-center gap-2.5 mb-5 text-xs lowercase tracking-[0.25em] ${className}`}>
             <span className="w-1.5 h-1.5 rounded-full bg-brand" />
             {children}
         </p>
@@ -68,7 +68,7 @@ export function PageHeader({ eyebrow, title, lead, children }: PageHeaderProps) 
         <header className="px-4 md:px-8 pt-32 md:pt-44 pb-14 md:pb-20">
             <div className="max-w-7xl mx-auto animate-fade-up">
                 <Eyebrow>{eyebrow}</Eyebrow>
-                <h1 className="text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-[4rem] font-semibold tracking-[-0.03em] max-w-4xl mb-6">
+                <h1 className="text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-[4rem] font-medium tracking-[-0.03em] max-w-4xl mb-6">
                     {title}
                 </h1>
                 <p className="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl">{lead}</p>

@@ -33,7 +33,7 @@ export default function ProductShowcase({ product, reverse = false, page }: Prod
         >
             <div className={reverse ? 'lg:order-2' : ''}>
                 <p className="mb-4 text-sm text-zinc-500">{statusLabels[product.status]}</p>
-                <h3 className="text-3xl md:text-4xl font-semibold tracking-[-0.025em] mb-2">{product.name}</h3>
+                <h3 className="text-3xl md:text-4xl font-medium tracking-[-0.025em] mb-2">{product.name}</h3>
                 <p className="text-lg md:text-xl text-zinc-400 mb-6">{product.tagline}</p>
                 <p className="text-zinc-300 text-base md:text-lg leading-relaxed mb-8">{product.description}</p>
                 <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-10">

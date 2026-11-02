@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Geist_Mono, Orbitron, Schibsted_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
 const schibsted = Schibsted_Grotesk({
   variable: "--font-schibsted",
   subsets: ["latin"],
+});
+
+// Used for the STDIOX wordmark in the footer.
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: "700",
 });
 
 const geistMono = Geist_Mono({
@@ -113,7 +120,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`${schibsted.variable} ${geistMono.variable} antialiased`}
+        className={`${schibsted.variable} ${geistMono.variable} ${orbitron.variable} antialiased`}
       >
         {children}
       </body>

@@ -98,7 +98,7 @@ export default function ContactPage() {
                     <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
                         <div data-reveal className="lg:col-span-4">
                             <Eyebrow>how we can help</Eyebrow>
-                            <h2 className="text-[2rem] sm:text-[2.75rem] font-semibold tracking-[-0.03em] leading-[1.05]">
+                            <h2 className="text-[2rem] sm:text-[2.75rem] font-medium tracking-[-0.03em] leading-[1.05]">
                                 What to get in touch about
                             </h2>
                         </div>

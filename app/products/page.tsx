@@ -43,7 +43,7 @@ export default function ProductsPage() {
                         <div data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 lg:items-end mb-8 md:mb-12">
                             <div className="lg:col-span-7">
                                 <Eyebrow>{category.label.split(' ')[0].toLowerCase()}</Eyebrow>
-                                <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                                <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
                                     {category.label}
                                 </h2>
                             </div>
