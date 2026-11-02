@@ -1,17 +1,54 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import SiteNav from '../components/SiteNav';
-import SiteFooter from '../components/SiteFooter';
+import { useEffect } from 'react';
+import { Eyebrow, GlassPage, MagneticLink, PageHeader } from '../components/LiquidGlass';
 import { trackPageView, trackEvent } from '../utils/mixpanel';
 
-export default function ContactPage() {
-    const [isVisible, setIsVisible] = useState(false);
-    const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+const contactMethods = [
+    {
+        id: 'email',
+        label: 'Email',
+        value: 'info@stdiox.com',
+        href: 'mailto:info@stdiox.com',
+        description: 'Drop us a line anytime',
+    },
+    {
+        id: 'phone',
+        label: 'Customer support',
+        value: '+254 183 053 254',
+        href: 'tel:+254183053254',
+        description: 'Available Mon–Fri, 9AM–6PM EAT',
+    },
+    {
+        id: 'location',
+        label: 'Location',
+        value: 'Kentmere Valley',
+        href: 'https://maps.google.com/?q=Kentmere+Valley+Kileleshwa+Nairobi',
+        description: 'Kileleshwa, Nairobi · Kenya',
+    },
+];
 
+const reasons = [
+    {
+        title: 'Product demos',
+        body: "SoldOutAfrica, StdioX Comms, Pay, Looker, Score, CRM and Bookings — tell us which and we'll set up a walkthrough.",
+    },
+    {
+        title: 'Event funding',
+        body: "Share your date, venue, lineup and budget and we'll tell you what we can prefinance.",
+    },
+    {
+        title: 'Technical inquiries',
+        body: 'Our engineering team responds to technical questions within 24 hours.',
+    },
+    {
+        title: 'Partnerships',
+        body: 'Reach out to discuss collaboration and integration possibilities.',
+    },
+];
+
+export default function ContactPage() {
     useEffect(() => {
-        setIsVisible(true);
         trackPageView('Contact', {
             page_title: 'StdioX Labs - Contact',
             page_path: '/contact',
@@ -26,202 +63,82 @@ export default function ContactPage() {
         });
     };
 
-    const contactMethods = [
-        {
-            id: 'email',
-            icon: '✉',
-            label: 'Email',
-            value: 'info@stdiox.com',
-            href: 'mailto:info@stdiox.com',
-            description: 'Drop us a line anytime'
-        },
-        {
-            id: 'phone',
-            icon: '☎',
-            label: 'Phone',
-            value: '+254 183 053 254',
-            href: 'tel:+254183053254',
-            description: 'Customer Support',
-            subtext: 'Available Mon-Fri, 9AM-6PM EAT'
-        },
-        {
-            id: 'location',
-            icon: '⚲',
-            label: 'Location',
-            value: 'Kentmere Valley',
-            href: 'https://maps.google.com/?q=Kentmere+Valley+Kileleshwa+Nairobi',
-            description: 'Kileleshwa, Nairobi',
-            subtext: 'Kenya'
-        }
-    ];
-
     return (
-        <div className="min-h-screen bg-black text-white">
-            {/* Background overlay */}
-            <div className="fixed inset-0 bg-gradient-to-b from-black via-black/95 to-black pointer-events-none" />
+        <GlassPage>
+            <PageHeader
+                eyebrow="Contact"
+                title="Let's build"
+                muted="something exceptional."
+                lead="Product demos, event funding, a custom build or a partnership — talk to the engineers directly."
+            />
 
-            <SiteNav />
-
-            {/* Main Content */}
-            <main className="relative pt-24 pb-16 px-4 md:px-8 md:pt-32 md:pb-20">
-                <div className="max-w-6xl mx-auto">
-                    {/* Header Section */}
-                    <div className={`mb-20 text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <h1
-                            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            Get in Touch
-                        </h1>
-                        <div className="w-32 h-1 bg-white mb-8 mx-auto" />
-                        <p
-                            className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-3xl mx-auto"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            Let's build something exceptional together.
-                        </p>
-                    </div>
-
-                    {/* Contact Cards */}
-                    <div className={`grid md:grid-cols-3 gap-8 mb-20 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="px-4 md:px-8 pb-16 md:pb-28">
+                <div className="max-w-7xl mx-auto space-y-16 md:space-y-28">
+                    {/* Contact methods */}
+                    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {contactMethods.map((method, index) => (
                             <a
                                 key={method.id}
                                 href={method.href}
                                 target={method.id === 'location' ? '_blank' : undefined}
                                 rel={method.id === 'location' ? 'noopener noreferrer' : undefined}
-                                onMouseEnter={() => setHoveredCard(method.id)}
-                                onMouseLeave={() => setHoveredCard(null)}
                                 onClick={() => handleContactClick(method.label, method.value)}
-                                className="group relative p-8 border-2 border-white/20 hover:border-white bg-white/5 backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:bg-white/10 cursor-pointer"
-                                style={{
-                                    transitionDelay: `${index * 100}ms`
-                                }}
+                                data-reveal
+                                style={{ transitionDelay: `${index * 90}ms` }}
+                                className="glass group flex flex-col rounded-[1.75rem] p-6 md:p-8 hover:-translate-y-1"
                             >
-                                {/* Animated corner accents */}
-                                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                                {/* Icon */}
-                                <div className="text-5xl mb-4 text-white group-hover:scale-110 transition-transform duration-300">
-                                    {method.icon}
+                                <div className="flex items-center justify-between mb-10 md:mb-16">
+                                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">{method.label}</span>
+                                    <span className="grid place-items-center w-10 h-10 rounded-full border border-white/15 text-zinc-300 group-hover:bg-white group-hover:text-black group-hover:rotate-[-45deg] transition-all duration-500">
+                                        →
+                                    </span>
                                 </div>
-
-                                {/* Label */}
-                                <h3
-                                    className="text-xl font-semibold mb-2 text-white"
-                                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                                >
-                                    {method.label}
-                                </h3>
-
-                                {/* Description */}
-                                <p className="text-sm text-gray-400 mb-4">
-                                    {method.description}
-                                </p>
-
-                                {/* Value */}
-                                <p
-                                    className="text-lg text-white font-medium mb-2 group-hover:text-gray-200 transition-colors"
-                                    style={{ fontFamily: 'var(--font-orbitron)' }}
-                                >
-                                    {method.value}
-                                </p>
-
-                                {/* Subtext */}
-                                {method.subtext && (
-                                    <p className="text-xs text-gray-500">
-                                        {method.subtext}
-                                    </p>
-                                )}
-
-                                {/* Hover indicator */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                <p className="text-2xl md:text-[1.7rem] font-medium tracking-tight mb-2 break-words">{method.value}</p>
+                                <p className="text-sm text-zinc-500">{method.description}</p>
                             </a>
                         ))}
-                    </div>
+                    </section>
 
-                    {/* Additional Information */}
-                    <div className={`max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <div className="p-10 border border-white/20 bg-white/5 backdrop-blur-sm">
-                            <h2
-                                className="text-2xl md:text-3xl font-semibold mb-6 text-white text-center"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
-                            >
-                                Ready to Start?
+                    {/* Reasons */}
+                    <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-8 lg:gap-16">
+                        <div data-reveal>
+                            <Eyebrow index="01">Ready to start?</Eyebrow>
+                            <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-5">
+                                What we can <span className="text-zinc-500">help with.</span>
                             </h2>
-                            <p className="text-gray-300 leading-relaxed mb-6 text-center">
-                                Whether you want a product demo, funding for your next event, a custom build or a
-                                partnership—we're here to help.
+                            <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
+                                Office hours are Monday to Friday, 9:00 AM – 6:00 PM East Africa Time.
                             </p>
-                            <div className="space-y-4 text-gray-400 text-sm">
-                                <div className="flex items-start gap-3">
-                                    <span className="text-white text-lg">•</span>
-                                    <p>
-                                        <strong className="text-white">Product Demos:</strong> SoldOutAfrica, StdioX Comms, Pay,
-                                        Looker, Score, CRM and Bookings—tell us which and we&apos;ll set up a walkthrough.
-                                    </p>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="text-white text-lg">•</span>
-                                    <p>
-                                        <strong className="text-white">Event Funding:</strong> Share your date, venue, lineup
-                                        and budget and we&apos;ll tell you what we can prefinance.
-                                    </p>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="text-white text-lg">•</span>
-                                    <p>
-                                        <strong className="text-white">Technical Inquiries:</strong> Our engineering team
-                                        responds to technical questions within 24 hours.
-                                    </p>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="text-white text-lg">•</span>
-                                    <p>
-                                        <strong className="text-white">Partnership Opportunities:</strong> Reach out to discuss
-                                        collaboration and integration possibilities.
-                                    </p>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="text-white text-lg">•</span>
-                                    <p>
-                                        <strong className="text-white">Office Hours:</strong> Monday to Friday, 9:00 AM - 6:00 PM
-                                        East Africa Time (EAT).
-                                    </p>
-                                </div>
-                            </div>
                         </div>
-                    </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {reasons.map((reason, index) => (
+                                <div
+                                    key={reason.title}
+                                    data-reveal
+                                    style={{ transitionDelay: `${index * 70}ms` }}
+                                    className="glass rounded-[1.5rem] p-6"
+                                >
+                                    <h3 className="font-medium mb-2">{reason.title}</h3>
+                                    <p className="text-zinc-400 text-sm leading-relaxed">{reason.body}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
 
-                    {/* Map Callout */}
-                    <div className={`mt-16 text-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <p className="text-gray-500 text-sm mb-6">
-                            Operating from Nairobi, building for Africa
-                        </p>
-                        <div className="flex justify-center gap-6">
-                            <Link
-                                href="/about"
-                                className="px-6 py-3 border border-white/30 hover:border-white text-white rounded-full text-sm backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
-                            >
-                                Learn About Us
-                            </Link>
-                            <Link
-                                href="/products"
-                                className="px-6 py-3 bg-white text-black rounded-full text-sm font-semibold hover:bg-gray-200 transition-all duration-300 cursor-pointer"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
-                            >
-                                View Our Work
-                            </Link>
+                    {/* Links */}
+                    <section data-reveal className="text-center">
+                        <p className="text-zinc-500 text-sm mb-6">Operating from Nairobi, building for Africa</p>
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <MagneticLink href="/products" className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-zinc-100 text-black font-medium hover:bg-white">
+                                View our work
+                            </MagneticLink>
+                            <MagneticLink href="/about" className="glass inline-flex items-center justify-center px-7 py-3.5 rounded-full font-medium">
+                                Learn about us
+                            </MagneticLink>
                         </div>
-                    </div>
+                    </section>
                 </div>
-            </main>
-
-            <SiteFooter />
-        </div>
+            </div>
+        </GlassPage>
     );
 }

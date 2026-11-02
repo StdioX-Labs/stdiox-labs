@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import ProductVisual from './ProductVisual';
-import { MagneticLink } from './LiquidGlass';
+import { Eyebrow, MagneticLink } from './LiquidGlass';
 import { productCategories, statusLabels } from '../data/products';
 import { trackEvent } from '../utils/mixpanel';
 
@@ -50,16 +50,6 @@ const withFunding = [0, 40, 40, 15, 15, 0, 20, 50, 90];
 const toPath = (values: number[]) =>
     values.map((v, i) => `${i === 0 ? 'M' : 'L'} ${(i / (values.length - 1)) * 300} ${100 - v * 0.9}`).join(' ');
 
-function Eyebrow({ index, children }: { index: string; children: string }) {
-    return (
-        <p className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 mb-6">
-            <span className="text-zinc-300">{index}</span>
-            <span className="w-8 h-px bg-zinc-700" />
-            {children}
-        </p>
-    );
-}
-
 export default function PlatformSections() {
     const handleClick = (destination: string, location: string) => {
         trackEvent('Navigation Clicked', {
@@ -72,12 +62,12 @@ export default function PlatformSections() {
     return (
         <div className="relative text-white">
             {/* Capabilities */}
-            <section id="platform" className="relative px-4 md:px-8 py-28 md:py-40 scroll-mt-24">
+            <section id="platform" className="relative px-4 md:px-8 py-20 md:py-32 lg:py-40 scroll-mt-24">
                 <div className="max-w-7xl mx-auto">
-                    <div data-reveal className="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:items-end mb-16 md:mb-20">
+                    <div data-reveal className="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:items-end mb-12 md:mb-20">
                         <div>
                             <Eyebrow index="01">What we build</Eyebrow>
-                            <h2 className="text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                            <h2 className="text-[2.1rem] sm:text-5xl lg:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
                                 One engineering team.{' '}
                                 <span className="text-zinc-500">A full stack of African infrastructure.</span>
                             </h2>
@@ -96,10 +86,10 @@ export default function PlatformSections() {
                                 onClick={() => handleClick(item.title, 'Capabilities')}
                                 data-reveal
                                 style={{ transitionDelay: `${index * 90}ms` }}
-                                className="glass group flex flex-col rounded-[1.75rem] p-7 min-h-[300px] hover:-translate-y-1.5"
+                                className="glass group flex flex-col rounded-[1.75rem] p-6 md:p-7 lg:min-h-[320px] hover:-translate-y-1.5"
                             >
                                 <span className="font-mono text-xs text-zinc-500">0{index + 1}</span>
-                                <h3 className="mt-auto text-xl font-medium tracking-tight mb-3">{item.title}</h3>
+                                <h3 className="mt-8 lg:mt-auto text-xl font-medium tracking-tight mb-3">{item.title}</h3>
                                 <p className="text-zinc-400 text-sm leading-relaxed">{item.body}</p>
                                 <span className="mt-6 grid place-items-center w-10 h-10 rounded-full border border-white/15 text-zinc-300 group-hover:bg-white group-hover:text-black group-hover:rotate-[-45deg] transition-all duration-500">
                                     →
@@ -112,7 +102,7 @@ export default function PlatformSections() {
 
             {/* Rails Marquee */}
             <section className="relative px-4 md:px-8" aria-label="Rails and channels we integrate">
-                <div data-reveal className="glass max-w-7xl mx-auto rounded-full py-5 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+                <div data-reveal className="glass max-w-7xl mx-auto rounded-full py-4 md:py-5 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
                     <div className="flex w-max animate-marquee">
                         {[...rails, ...rails].map((rail, i) => (
                             <span key={i} className="flex items-center gap-10 mx-5 text-lg md:text-xl font-medium tracking-tight text-zinc-400 whitespace-nowrap">
@@ -125,12 +115,12 @@ export default function PlatformSections() {
             </section>
 
             {/* Products */}
-            <section className="relative px-4 md:px-8 py-28 md:py-40">
+            <section className="relative px-4 md:px-8 py-20 md:py-32 lg:py-40">
                 <div className="max-w-7xl mx-auto">
-                    <div data-reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
+                    <div data-reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-8 mb-10 md:mb-16">
                         <div>
                             <Eyebrow index="02">Products</Eyebrow>
-                            <h2 className="text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
+                            <h2 className="text-[2.1rem] sm:text-5xl lg:text-6xl font-semibold tracking-[-0.03em] leading-[1.05]">
                                 Built. Shipped. <span className="text-zinc-500">Running.</span>
                             </h2>
                         </div>
@@ -147,33 +137,37 @@ export default function PlatformSections() {
                         {productCategories.map((category, index) => {
                             const [flagship, ...others] = category.products;
                             const flagshipHref = flagship.url ?? `/products#${flagship.id}`;
+                            // On two-column tablets the odd last card spans the row and lays out side by side.
+                            const wide = index === productCategories.length - 1 && productCategories.length % 2 === 1;
                             return (
                                 <article
                                     key={category.id}
                                     data-reveal
                                     style={{ transitionDelay: `${index * 120}ms` }}
-                                    className="glass flex flex-col rounded-[2rem] p-3"
+                                    className={`glass flex flex-col rounded-[2rem] p-3 ${wide ? 'md:col-span-2 xl:col-span-1' : ''}`}
                                 >
                                     <a
                                         href={flagshipHref}
                                         target={flagship.url ? '_blank' : undefined}
                                         rel={flagship.url ? 'noopener noreferrer' : undefined}
                                         onClick={() => trackEvent('Product Clicked', { product_name: flagship.name, product_url: flagshipHref, page: 'Home' })}
-                                        className="group block rounded-[1.6rem] p-5 hover:bg-white/[0.03] transition-colors"
+                                        className={`group block rounded-[1.6rem] p-4 sm:p-5 hover:bg-white/[0.03] transition-colors ${wide ? 'md:max-xl:grid md:max-xl:grid-cols-2 md:max-xl:gap-8 md:max-xl:items-center' : ''}`}
                                     >
-                                        <div className="flex items-center justify-between mb-5">
-                                            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">{category.label}</span>
-                                            <span className="text-[10px] uppercase tracking-widest text-zinc-300 border border-white/15 rounded-full px-2.5 py-1">
-                                                {statusLabels[flagship.status]}
-                                            </span>
+                                        <div>
+                                            <div className="flex items-center justify-between mb-5">
+                                                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">{category.label.split(' ')[0]}</span>
+                                                <span className="text-[10px] uppercase tracking-widest text-zinc-300 border border-white/15 rounded-full px-2.5 py-1">
+                                                    {statusLabels[flagship.status]}
+                                                </span>
+                                            </div>
+                                            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">{flagship.name}</h3>
+                                            <p className="text-zinc-400 mt-1 mb-6">{flagship.tagline}</p>
                                         </div>
-                                        <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">{flagship.name}</h3>
-                                        <p className="text-zinc-400 mt-1 mb-6">{flagship.tagline}</p>
                                         <div className="group-hover:-translate-y-1 transition-transform duration-500">
                                             <ProductVisual productId={flagship.id} accent={chrome} />
                                         </div>
                                     </a>
-                                    <div className="mt-auto pt-2">
+                                    <div className={`mt-auto pt-2 ${wide ? 'md:max-xl:grid md:max-xl:grid-cols-2 md:max-xl:gap-x-3' : ''}`}>
                                         {others.map((product) => (
                                             <Link
                                                 key={product.id}
@@ -197,14 +191,14 @@ export default function PlatformSections() {
             </section>
 
             {/* Funding */}
-            <section className="relative px-4 md:px-8 pb-28 md:pb-40">
-                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2.5rem] p-6 md:p-14 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <section className="relative px-4 md:px-8 pb-20 md:pb-32 lg:pb-40">
+                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-12 lg:p-14 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                     <div>
                         <Eyebrow index="03">Funding</Eyebrow>
-                        <h2 className="text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.05] mb-6">
+                        <h2 className="text-[2.1rem] sm:text-5xl lg:text-6xl font-semibold tracking-[-0.03em] leading-[1.05] mb-6">
                             We sell the tickets. <span className="text-zinc-500">We fund the event.</span>
                         </h2>
-                        <p className="text-zinc-400 text-lg leading-relaxed mb-10">
+                        <p className="text-zinc-400 text-base md:text-lg leading-relaxed mb-10">
                             Event prefinancing advances the venue deposit, artist fee and marketing budget before a single
                             ticket sells — repaid automatically from ticket revenue. No collateral, no separate repayment
                             schedule. Our V2 capital pool is sized for stadium shows, not just club nights.
@@ -228,10 +222,10 @@ export default function PlatformSections() {
                     </div>
 
                     {/* Cash position chart */}
-                    <div className="rounded-[1.75rem] bg-black/40 border border-white/10 p-6 md:p-8">
-                        <div className="flex items-center justify-between mb-6">
+                    <div className="rounded-[1.5rem] bg-black/40 border border-white/10 p-5 md:p-8">
+                        <div className="flex items-start justify-between gap-4 mb-6">
                             <p className="font-medium">Organizer cash position</p>
-                            <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Illustrative</p>
+                            <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 pt-1">Illustrative</p>
                         </div>
                         <svg viewBox="0 -10 300 200" className="w-full h-auto" role="img" aria-label="Cash position with and without prefinancing over the eight weeks before an event">
                             <defs>
@@ -251,7 +245,7 @@ export default function PlatformSections() {
                             <text x="0" y="185" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace">WEEK −8</text>
                             <text x="300" y="185" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace" textAnchor="end">EVENT</text>
                         </svg>
-                        <div className="flex flex-wrap gap-6 mt-4 text-xs">
+                        <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4 text-xs">
                             <span className="flex items-center gap-2">
                                 <span className="w-4 h-0.5 rounded-full bg-white" /> With prefinancing
                             </span>
@@ -259,16 +253,16 @@ export default function PlatformSections() {
                                 <span className="w-4 h-0.5 rounded-full bg-white/30" /> Out of your own pocket
                             </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 mt-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-6 md:mt-8">
                             {[
                                 { step: 'Advance', body: 'Weeks before on-sale' },
                                 { step: 'Sell', body: 'M-Pesa, card, mobile money' },
                                 { step: 'Self-clear', body: 'Repaid from tickets' },
                             ].map((item, index) => (
-                                <div key={item.step} className="rounded-2xl bg-white/[0.04] border border-white/[0.07] p-3">
-                                    <p className="font-mono text-zinc-600 text-[10px] mb-1">0{index + 1}</p>
+                                <div key={item.step} className="flex sm:block items-baseline gap-3 rounded-2xl bg-white/[0.04] border border-white/[0.07] px-4 py-3 sm:p-3">
+                                    <p className="font-mono text-zinc-600 text-[10px] sm:mb-1">0{index + 1}</p>
                                     <p className="font-medium text-sm">{item.step}</p>
-                                    <p className="text-zinc-500 text-xs mt-1">{item.body}</p>
+                                    <p className="text-zinc-500 text-xs sm:mt-1">{item.body}</p>
                                 </div>
                             ))}
                         </div>
@@ -277,14 +271,14 @@ export default function PlatformSections() {
             </section>
 
             {/* Engineering */}
-            <section className="relative px-4 md:px-8 pb-28 md:pb-40">
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+            <section className="relative px-4 md:px-8 pb-20 md:pb-32 lg:pb-40">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12">
                     <div data-reveal>
                         <Eyebrow index="04">Under the hood</Eyebrow>
-                        <h2 className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-6">
+                        <h2 className="text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-6">
                             Built from first principles. <span className="text-zinc-500">Run by us.</span>
                         </h2>
-                        <p className="text-zinc-400 text-lg leading-relaxed">
+                        <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
                             Every product shares the same engineering backbone — payment rails, identity, messaging and
                             infrastructure we design, deploy and operate ourselves. We also build custom platforms for
                             partners on the same stack.
@@ -307,9 +301,9 @@ export default function PlatformSections() {
             </section>
 
             {/* CTA */}
-            <section className="relative px-4 md:px-8 pb-28">
-                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2.5rem] px-6 py-20 md:py-28 text-center overflow-hidden">
-                    <h2 className="text-4xl md:text-7xl font-semibold tracking-[-0.04em] leading-[1] mb-6">
+            <section className="relative px-4 md:px-8 pb-16 md:pb-28">
+                <div data-reveal className="glass max-w-7xl mx-auto rounded-[2rem] md:rounded-[2.5rem] px-5 py-14 md:py-28 text-center overflow-hidden">
+                    <h2 className="text-[2.4rem] sm:text-6xl lg:text-7xl font-semibold tracking-[-0.04em] leading-[1] mb-6">
                         Let&apos;s build <span className="text-zinc-500">what&apos;s next.</span>
                     </h2>
                     <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto">

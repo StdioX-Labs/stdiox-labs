@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import SiteNav from '../components/SiteNav';
-import SiteFooter from '../components/SiteFooter';
+import { useEffect } from 'react';
+import { Eyebrow, GlassPage, MagneticLink, PageHeader } from '../components/LiquidGlass';
 import { trackPageView, trackEvent } from '../utils/mixpanel';
 
 const timeline = [
@@ -38,6 +36,12 @@ const criteria = [
     },
 ];
 
+const keyPoints = [
+    { title: 'No collateral', body: 'Assessed on the event, not your house. The event is effectively its own security.' },
+    { title: 'Self-clearing', body: 'Repaid from ticket revenue before settlement. No separate repayment schedule to manage.' },
+    { title: 'Stadium-scale', body: 'Our V2 capital pool supports far more events, and far bigger ones — not just club nights.' },
+];
+
 const infrastructure = [
     { title: 'Realtime Settlement', body: 'See revenue as it arrives, not weeks after the event.' },
     { title: 'Marketing Attribution', body: 'Know which channel, post or link actually sold the ticket.' },
@@ -46,10 +50,7 @@ const infrastructure = [
 ];
 
 export default function FundingPage() {
-    const [isVisible, setIsVisible] = useState(false);
-
     useEffect(() => {
-        setIsVisible(true);
         trackPageView('Funding', {
             page_title: 'StdioX Labs - Funding',
             page_path: '/funding',
@@ -63,186 +64,175 @@ export default function FundingPage() {
         });
     };
 
+    const sectionHeading = 'text-[2.1rem] sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-5';
+    const sectionLead = 'text-zinc-400 text-base md:text-lg leading-relaxed max-w-2xl mb-10';
+
     return (
-        <div className="relative min-h-screen bg-black text-white overflow-x-hidden">
-            {/* Background accents */}
-            <div className="absolute inset-x-0 top-0 h-[700px] bg-grid pointer-events-none" />
-            <div className="absolute -top-40 right-0 w-[700px] h-[500px] rounded-full blur-3xl opacity-25 pointer-events-none bg-gradient-to-br from-violet-500 via-fuchsia-400 to-amber-300" />
+        <GlassPage>
+            <PageHeader
+                eyebrow="Funding · Event prefinancing"
+                title="The event should"
+                muted="fund the event."
+                lead="Through SoldOutAfrica, we advance capital to organizers before ticket sales begin — venue deposit, artist advance, marketing — and it is repaid automatically from ticket revenue as it comes in."
+            >
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <MagneticLink
+                        href="/contact"
+                        onClick={() => handleCtaClick('Header - Talk to Us')}
+                        className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-zinc-100 text-black font-medium hover:bg-white"
+                    >
+                        Talk to us about your event
+                    </MagneticLink>
+                    <a
+                        href="https://soldoutafrica.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => handleCtaClick('Header - SoldOutAfrica')}
+                        className="glass inline-flex items-center justify-center px-7 py-3.5 rounded-full font-medium"
+                    >
+                        Visit SoldOutAfrica ↗
+                    </a>
+                </div>
+            </PageHeader>
 
-            <SiteNav />
-
-            <main className="relative pt-24 pb-16 px-4 md:px-8 md:pt-32 md:pb-20">
-                <div className="max-w-6xl mx-auto">
-                    {/* Header Section */}
-                    <div className={`mb-24 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <p className="text-xs tracking-[0.3em] uppercase text-gray-400 mb-6" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Funding · Event Prefinancing
-                        </p>
-                        <h1
-                            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
-                        >
-                            The event should{' '}
-                            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">
-                                fund the event.
-                            </span>
-                        </h1>
-                        <div className="w-32 h-1 mb-8 bg-gradient-to-r from-violet-400 to-pink-400" />
-                        <p className="text-lg md:text-2xl text-gray-300 leading-relaxed max-w-3xl">
-                            Through SoldOutAfrica, we advance capital to organizers before ticket sales begin — venue deposit,
-                            artist advance, marketing — and it is repaid automatically from ticket revenue as it comes in.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 mt-10">
-                            <Link
-                                href="/contact"
-                                onClick={() => handleCtaClick('Header - Talk to Us')}
-                                className="px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 hover:scale-105 text-center"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
+            <div className="px-4 md:px-8 pb-16 md:pb-28">
+                <div className="max-w-7xl mx-auto space-y-20 md:space-y-32">
+                    {/* Key points */}
+                    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {keyPoints.map((point, index) => (
+                            <div
+                                key={point.title}
+                                data-reveal
+                                style={{ transitionDelay: `${index * 90}ms` }}
+                                className="glass rounded-[1.75rem] p-6 md:p-8"
                             >
-                                Talk to Us About Your Event
-                            </Link>
-                            <a
-                                href="https://soldoutafrica.com/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() => handleCtaClick('Header - SoldOutAfrica')}
-                                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300 hover:scale-105 text-center"
-                                style={{ fontFamily: 'var(--font-orbitron)' }}
-                            >
-                                Visit SoldOutAfrica
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Key Points */}
-                    <section className={`grid md:grid-cols-3 gap-6 mb-24 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        {[
-                            { title: 'No Collateral', body: 'Assessed on the event, not your house. The event is effectively its own security.' },
-                            { title: 'Self-Clearing', body: 'Repaid from ticket revenue before settlement. No separate repayment schedule to manage.' },
-                            { title: 'Stadium-Scale', body: 'Our V2 capital pool supports far more events, and far bigger ones — not just club nights.' },
-                        ].map((point) => (
-                            <div key={point.title} className="p-8 border border-white/20 hover:border-white/40 bg-white/5 backdrop-blur-sm transition-all duration-300">
-                                <h3 className="text-xl font-semibold mb-3 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                    {point.title}
-                                </h3>
-                                <p className="text-gray-400 leading-relaxed">{point.body}</p>
+                                <p className="font-mono text-xs text-zinc-500 mb-10 md:mb-16">0{index + 1}</p>
+                                <h3 className="text-xl md:text-2xl font-medium tracking-tight mb-3">{point.title}</h3>
+                                <p className="text-zinc-400 text-sm md:text-base leading-relaxed">{point.body}</p>
                             </div>
                         ))}
                     </section>
 
-                    {/* Cash Flow Comparison */}
-                    <section className="mb-24">
-                        <h2 className="text-2xl md:text-4xl font-semibold mb-4 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Your Cash Flow, Before and After
+                    {/* Cash flow comparison */}
+                    <section data-reveal>
+                        <Eyebrow index="01">Cash flow</Eyebrow>
+                        <h2 className={sectionHeading}>
+                            Before and after. <span className="text-zinc-500">Week by week.</span>
                         </h2>
-                        <p className="text-gray-400 text-lg mb-10 max-w-3xl">
-                            Without prefinancing you are out of pocket for eight weeks and exposed for every shilling.
-                            With it, you run the event on the event&apos;s own money.
+                        <p className={sectionLead}>
+                            Without prefinancing you are out of pocket for eight weeks and exposed for every shilling. With it,
+                            you run the event on the event&apos;s own money.
                         </p>
-                        <div className="overflow-x-auto border border-white/20">
-                            <table className="w-full text-left min-w-[520px]">
-                                <thead className="bg-white/10" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                    <tr className="text-xs tracking-[0.15em] uppercase">
-                                        <th className="p-4 font-semibold">Week</th>
-                                        <th className="p-4 font-semibold text-gray-400">Without Prefinancing</th>
-                                        <th className="p-4 font-semibold">With Prefinancing</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {timeline.map((row) => (
-                                        <tr key={row.week} className="border-t border-white/10">
-                                            <td className="p-4 text-white font-medium whitespace-nowrap" style={{ fontFamily: 'var(--font-orbitron)' }}>{row.week}</td>
-                                            <td className="p-4 text-gray-500">{row.without}</td>
-                                            <td className="p-4 text-white">{row.with}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                        <div className="glass rounded-[1.75rem] overflow-hidden">
+                            <div className="hidden sm:grid grid-cols-[110px_1fr_1fr] gap-4 px-6 py-4 border-b border-white/10 font-mono text-[11px] uppercase tracking-[0.15em] text-zinc-500">
+                                <span>Week</span>
+                                <span>Without prefinancing</span>
+                                <span className="text-zinc-200">With prefinancing</span>
+                            </div>
+                            {timeline.map((row) => (
+                                <div
+                                    key={row.week}
+                                    className="grid grid-cols-[72px_1fr] sm:grid-cols-[110px_1fr_1fr] gap-x-4 gap-y-1 px-5 sm:px-6 py-4 border-b border-white/[0.06] last:border-b-0"
+                                >
+                                    <span className="font-mono text-sm text-white row-span-2 sm:row-span-1">{row.week}</span>
+                                    <span className="text-zinc-500 text-sm">
+                                        <span className="sm:hidden text-zinc-600">Without · </span>
+                                        {row.without}
+                                    </span>
+                                    <span className="text-white text-sm">
+                                        <span className="sm:hidden text-zinc-500">With · </span>
+                                        {row.with}
+                                    </span>
+                                </div>
+                            ))}
                         </div>
                     </section>
 
-                    {/* What We Look At */}
-                    <section className="mb-24">
-                        <h2 className="text-2xl md:text-4xl font-semibold mb-4 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            What We Look At
-                        </h2>
-                        <p className="text-gray-400 text-lg mb-10 max-w-3xl">
-                            Decisions are made on the event, not on your personal finances. No history with us is not a
-                            disqualification — the conversation just starts earlier, and probably smaller.
-                        </p>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    {/* What we look at */}
+                    <section>
+                        <div data-reveal>
+                            <Eyebrow index="02">Assessment</Eyebrow>
+                            <h2 className={sectionHeading}>
+                                What we look at. <span className="text-zinc-500">The event, not you.</span>
+                            </h2>
+                            <p className={sectionLead}>
+                                Decisions are made on the event, not on your personal finances. No history with us is not a
+                                disqualification — the conversation just starts earlier, and probably smaller.
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                             {criteria.map((item, index) => (
-                                <div key={item.title} className="p-6 border border-white/20 bg-white/5">
-                                    <div className="text-3xl font-bold text-gray-600 mb-4" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                        0{index + 1}
-                                    </div>
-                                    <h3 className="text-base font-semibold mb-2 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                        {item.title}
-                                    </h3>
-                                    <p className="text-gray-400 text-sm leading-relaxed">{item.body}</p>
+                                <div
+                                    key={item.title}
+                                    data-reveal
+                                    style={{ transitionDelay: `${index * 70}ms` }}
+                                    className="glass rounded-[1.5rem] p-6"
+                                >
+                                    <p className="font-mono text-xs text-zinc-500 mb-4 sm:mb-8">0{index + 1}</p>
+                                    <h3 className="font-medium mb-2">{item.title}</h3>
+                                    <p className="text-zinc-400 text-sm leading-relaxed">{item.body}</p>
                                 </div>
                             ))}
                         </div>
                     </section>
 
                     {/* Infrastructure */}
-                    <section className="mb-24">
-                        <h2 className="text-2xl md:text-4xl font-semibold mb-4 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Capital Needs Infrastructure
-                        </h2>
-                        <p className="text-gray-400 text-lg mb-10 max-w-3xl">
-                            An advance is only as safe as the platform underneath it. Prefinancing sits on the same stack we
-                            engineered for SoldOutAfrica.
-                        </p>
-                        <div className="grid md:grid-cols-2 gap-6">
-                            {infrastructure.map((item) => (
-                                <div key={item.title} className="flex items-start gap-4 p-6 border-l-4 border-white bg-white/5">
-                                    <span className="text-white text-xl">→</span>
-                                    <div>
-                                        <h3 className="font-semibold mb-1 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                                            {item.title}
-                                        </h3>
-                                        <p className="text-gray-400">{item.body}</p>
-                                    </div>
+                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+                        <div data-reveal>
+                            <Eyebrow index="03">Infrastructure</Eyebrow>
+                            <h2 className={sectionHeading}>
+                                Capital needs <span className="text-zinc-500">infrastructure.</span>
+                            </h2>
+                            <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
+                                An advance is only as safe as the platform underneath it. Prefinancing sits on the same stack we
+                                engineered for SoldOutAfrica.
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
+                            {infrastructure.map((item, index) => (
+                                <div
+                                    key={item.title}
+                                    data-reveal
+                                    style={{ transitionDelay: `${index * 70}ms` }}
+                                    className="glass rounded-[1.5rem] p-6"
+                                >
+                                    <h3 className="font-medium mb-2">{item.title}</h3>
+                                    <p className="text-zinc-400 text-sm leading-relaxed">{item.body}</p>
                                 </div>
                             ))}
                         </div>
                     </section>
 
-                    {/* Honest Fit */}
-                    <section className="mb-24 p-8 md:p-12 border-l-4 border-white bg-white/5 backdrop-blur-sm">
-                        <h2 className="text-xl md:text-2xl font-semibold mb-4 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            What prefinancing does not fix
-                        </h2>
-                        <p className="text-gray-300 leading-relaxed text-lg">
+                    {/* Honest fit */}
+                    <section data-reveal className="glass rounded-[2rem] p-6 sm:p-10 md:p-14">
+                        <Eyebrow>Honest fit</Eyebrow>
+                        <h2 className="text-2xl md:text-4xl font-semibold tracking-[-0.02em] mb-5">What prefinancing does not fix</h2>
+                        <p className="text-zinc-300 leading-relaxed text-base md:text-lg max-w-3xl">
                             It does not make a bad event good, and it does not replace a marketing plan — it funds one. Capital
-                            amplifies the outcome in both directions. It earns its keep when upfront costs are large enough
-                            that fronting them yourself changes what you are able to attempt.
+                            amplifies the outcome in both directions. It earns its keep when upfront costs are large enough that
+                            fronting them yourself changes what you are able to attempt.
                         </p>
                     </section>
 
                     {/* CTA */}
-                    <section className="text-center">
-                        <h2 className="text-2xl md:text-4xl font-semibold mb-4 text-white" style={{ fontFamily: 'var(--font-orbitron)' }}>
-                            Bring Us Your Next Event
+                    <section data-reveal className="text-center">
+                        <h2 className="text-[2.4rem] sm:text-6xl font-semibold tracking-[-0.04em] leading-[1] mb-6">
+                            Bring us your <span className="text-zinc-500">next event.</span>
                         </h2>
-                        <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
+                        <p className="text-zinc-400 text-base md:text-lg mb-10 max-w-2xl mx-auto">
                             You don&apos;t need a deck. You need a date, a venue, a lineup and an honest view of what it costs.
                             Tell us what you&apos;re planning in the next six months and we&apos;ll tell you what we can front.
                         </p>
-                        <Link
+                        <MagneticLink
                             href="/contact"
                             onClick={() => handleCtaClick('Footer - Get in Touch')}
-                            className="inline-block px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 hover:scale-105"
-                            style={{ fontFamily: 'var(--font-orbitron)' }}
+                            className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-zinc-100 text-black font-medium hover:bg-white"
                         >
-                            Get in Touch
-                        </Link>
+                            Get in touch
+                        </MagneticLink>
                     </section>
                 </div>
-            </main>
-
-            <SiteFooter />
-        </div>
+            </div>
+        </GlassPage>
     );
 }

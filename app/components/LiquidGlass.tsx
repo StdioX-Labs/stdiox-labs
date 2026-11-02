@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react';
 import Link from 'next/link';
+import SiteNav from './SiteNav';
+import SiteFooter from './SiteFooter';
 
 const blobs = [
     {
@@ -125,5 +127,66 @@ export function MagneticLink({ href, className, children, onClick }: MagneticLin
         >
             {children}
         </Link>
+    );
+}
+
+/** Shell for inner pages: liquid backdrop, floating nav and footer. */
+export function GlassPage({ children }: { children: ReactNode }) {
+    return (
+        <div className="relative min-h-screen overflow-x-hidden bg-[#0b0b0d] text-white">
+            <LiquidScene />
+            <div className="relative z-10">
+                <SiteNav />
+                <main>{children}</main>
+                <SiteFooter />
+            </div>
+        </div>
+    );
+}
+
+export function Eyebrow({ index, children }: { index?: string; children: string }) {
+    return (
+        <p className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 mb-6">
+            {index && (
+                <>
+                    <span className="text-zinc-300">{index}</span>
+                    <span className="w-8 h-px bg-zinc-700" />
+                </>
+            )}
+            {children}
+        </p>
+    );
+}
+
+interface PageHeaderProps {
+    eyebrow: string;
+    title: string;
+    muted?: string;
+    lead: string;
+    children?: ReactNode;
+}
+
+/** Inner page header: a two-tone headline that rises in, a lead paragraph and optional actions. */
+export function PageHeader({ eyebrow, title, muted, lead, children }: PageHeaderProps) {
+    return (
+        <header className="px-4 md:px-8 pt-32 md:pt-44 pb-16 md:pb-24">
+            <div className="max-w-7xl mx-auto">
+                <div className="animate-fade-up">
+                    <Eyebrow>{eyebrow}</Eyebrow>
+                </div>
+                <h1 className="text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-[5.5rem] lg:leading-[1] font-semibold tracking-[-0.035em] max-w-5xl mb-8">
+                    <span className="block overflow-hidden pb-[0.08em]">
+                        <span className="block animate-rise [animation-delay:100ms]">{title}</span>
+                    </span>
+                    {muted && (
+                        <span className="block overflow-hidden pb-[0.08em]">
+                            <span className="block animate-rise text-zinc-500 [animation-delay:220ms]">{muted}</span>
+                        </span>
+                    )}
+                </h1>
+                <p className="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl animate-fade-up [animation-delay:400ms]">{lead}</p>
+                {children && <div className="mt-10 animate-fade-up [animation-delay:550ms]">{children}</div>}
+            </div>
+        </header>
     );
 }

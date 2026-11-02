@@ -123,10 +123,10 @@ export default function HeroSection() {
         <section className="relative min-h-screen flex flex-col text-white">
             <SiteNav />
 
-            <div className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 pt-32 md:pt-40 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-16 lg:gap-12 items-center">
+            <div className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 pt-28 md:pt-40 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-16 lg:gap-12 items-center">
                 {/* Copy */}
                 <div>
-                    <p className="flex items-center gap-3 mb-10 font-mono text-xs uppercase tracking-[0.2em] text-zinc-400 animate-fade-up">
+                    <p className="flex items-center gap-3 mb-8 md:mb-10 font-mono text-[11px] sm:text-xs uppercase tracking-[0.2em] text-zinc-400 animate-fade-up">
                         <span className="relative flex w-2 h-2">
                             <span className="absolute inset-0 rounded-full bg-zinc-200 animate-ping opacity-60" />
                             <span className="relative w-2 h-2 rounded-full bg-zinc-100" />
@@ -134,7 +134,7 @@ export default function HeroSection() {
                         StdioX Labs · Nairobi <NairobiClock />
                     </p>
 
-                    <h1 className="text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-[5.25rem] lg:leading-[1] font-semibold tracking-[-0.035em] mb-10">
+                    <h1 className="text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-[5.25rem] lg:leading-[1] font-semibold tracking-[-0.035em] mb-8 md:mb-10">
                         {headline.map((word, index) => (
                             <span key={word} className="inline-block overflow-hidden align-bottom pb-[0.1em] mr-[0.22em]">
                                 <span
@@ -150,7 +150,7 @@ export default function HeroSection() {
                         </span>
                     </h1>
 
-                    <p className="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-xl mb-12 animate-fade-up [animation-delay:750ms]">
+                    <p className="text-base sm:text-lg md:text-xl text-zinc-400 leading-relaxed max-w-xl mb-10 md:mb-12 animate-fade-up [animation-delay:750ms]">
                         We design, ship and run ticketing, payments, lending and messaging platforms from Nairobi — and front
                         the capital for the events that sell on them.
                     </p>
@@ -175,7 +175,7 @@ export default function HeroSection() {
                 </div>
 
                 {/* Activity panel */}
-                <div className="relative animate-fade-up [animation-delay:400ms]" onPointerMove={handleTilt} onPointerLeave={resetTilt}>
+                <div className="relative sm:mr-10 lg:mr-6 animate-fade-up [animation-delay:400ms]" onPointerMove={handleTilt} onPointerLeave={resetTilt}>
                     <div ref={tiltRef} className="relative transition-transform duration-500 ease-out will-change-transform">
                         {/* Depth layers */}
                         <div className="glass hidden sm:block absolute inset-0 rounded-[2rem] translate-x-5 translate-y-5 rotate-2 opacity-60" />
@@ -185,7 +185,7 @@ export default function HeroSection() {
                             <div className="flex items-center justify-between mb-5 px-1">
                                 <div>
                                     <p className="text-sm font-medium">Across the stack</p>
-                                    <p className="text-xs text-zinc-500">Ticketing · Payments · Lending · Messaging</p>
+                                    <p className="text-xs text-zinc-500 hidden sm:block">Ticketing · Payments · Lending · Messaging</p>
                                 </div>
                                 <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 border border-white/10 rounded-full px-2.5 py-1">
                                     Sample
@@ -198,7 +198,7 @@ export default function HeroSection() {
             </div>
 
             {/* Product line dock */}
-            <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-16 pb-8 animate-fade-up [animation-delay:1100ms]">
+            <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-14 md:pt-16 pb-8 animate-fade-up [animation-delay:1100ms]">
                 <div className="glass rounded-3xl grid grid-cols-1 sm:grid-cols-[repeat(3,1fr)_auto] divide-y sm:divide-y-0 sm:divide-x divide-white/10">
                     {productCategories.map((category) => (
                         <a
