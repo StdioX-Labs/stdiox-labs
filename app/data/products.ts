@@ -28,14 +28,14 @@ export const statusLabels: Record<ProductStatus, string> = {
 export const productCategories: ProductCategory[] = [
     {
         id: 'events',
-        label: 'Ticketing for Business',
-        summary: 'Ticketing infrastructure for event companies, venues and brands — on our platform, under your brand, or through our API.',
+        label: 'Ticketing',
+        summary: 'For event companies, venues and brands: sell on SoldOutAfrica, under your own brand, or through our API.',
         accent: ['#a78bfa', '#f472b6'],
         products: [
             {
                 id: 'soldoutafrica',
                 name: 'SoldOutAfrica',
-                tagline: 'The Ticketing Platform',
+                tagline: 'Ticketing and merchandise for event companies',
                 description:
                     'The ticketing and merchandise platform event companies run their sales on. Go live the same day with M-Pesa, card and mobile money, realtime settlement, and infrastructure sized for on-sale peaks.',
                 url: 'https://soldoutafrica.com/',
@@ -52,7 +52,7 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'prefinancing',
                 name: 'Event Prefinancing',
-                tagline: 'Fund the Event Before It Sells',
+                tagline: 'Upfront event costs, repaid from ticket sales',
                 description:
                     'A SoldOutAfrica offering for organizers selling on the platform. Venue deposits, artist advances and marketing budgets are advanced before on-sale and repaid automatically from ticket revenue as it comes in.',
                 url: 'https://soldoutafrica.com/',
@@ -67,9 +67,9 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'white-label',
                 name: 'White-Label Ticketing',
-                tagline: 'Your Brand. Our Engine.',
+                tagline: 'A ticketing storefront under your own brand',
                 description:
-                    'A fully branded ticketing storefront for event companies and venues — your domain, your templates, your organizer team — running on the SoldOutAfrica engine.',
+                    'A fully branded ticketing storefront for event companies and venues, with your domain, templates and organizer team, running on SoldOutAfrica.',
                 url: null,
                 status: 'enterprise',
                 features: [
@@ -82,9 +82,9 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'ticketing-api',
                 name: 'Ticketing API',
-                tagline: 'Ticketing Inside Your Product',
+                tagline: 'Ticketing inside your own apps and sites',
                 description:
-                    'Direct API access to events, inventory, checkout and orders for businesses that want ticketing inside their own apps and sites — with a sandbox and enterprise SLAs.',
+                    'Direct API access to events, inventory, checkout and orders for businesses that want ticketing inside their own apps and sites. Includes a sandbox and enterprise SLAs.',
                 url: null,
                 status: 'enterprise',
                 features: [
@@ -98,14 +98,14 @@ export const productCategories: ProductCategory[] = [
     },
     {
         id: 'fintech',
-        label: 'Payments & Financial Infrastructure',
-        summary: 'Moving, protecting and lending money — engineered for African rails.',
+        label: 'Payments and lending',
+        summary: 'Collecting payments, screening them for fraud, and lending.',
         accent: ['#34d399', '#a3e635'],
         products: [
             {
                 id: 'pay',
                 name: 'StdioX Pay',
-                tagline: 'Card Collection, Done Right',
+                tagline: 'Hosted card payments and a collection API',
                 description:
                     'Hosted payment pages and a collection API for card and cross-border payments, with live exchange rates and signed callbacks into your system.',
                 url: null,
@@ -120,9 +120,9 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'looker',
                 name: 'Looker',
-                tagline: 'Fraud Screening & Chargeback Defence',
+                tagline: 'Fraud screening and chargeback evidence',
                 description:
-                    'Sits between checkout and the acquirer. For every transaction it decides in milliseconds — approve, challenge with 3-D Secure, or decline — and keeps the evidence needed to win the dispute.',
+                    'Sits between checkout and the acquirer. For every transaction it decides in milliseconds whether to approve, challenge with 3-D Secure or decline, and keeps the evidence needed to win a dispute.',
                 url: null,
                 status: 'enterprise',
                 features: [
@@ -135,7 +135,7 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'score',
                 name: 'Score',
-                tagline: 'Core Banking & Credit Decisioning',
+                tagline: 'Core banking and credit decisions for lenders',
                 description:
                     'A lending stack for digital lenders and SACCOs: onboarding with KYC and face verification, credit scoring and automated loan decisions on top of a full core banking ledger.',
                 url: null,
@@ -151,16 +151,16 @@ export const productCategories: ProductCategory[] = [
     },
     {
         id: 'business',
-        label: 'Communications & Business Software',
-        summary: 'The everyday tools businesses run on — reach, customers and bookings.',
+        label: 'Messaging and business tools',
+        summary: 'Messaging, customer records and appointment booking.',
         accent: ['#38bdf8', '#818cf8'],
         products: [
             {
                 id: 'comms',
                 name: 'StdioX Comms',
-                tagline: 'SMS, Email & WhatsApp — One API',
+                tagline: 'SMS, email and WhatsApp through one API',
                 description:
-                    'A single developer API for SMS, transactional and bulk email, and WhatsApp — plus WhatsApp AI agents that answer customers and call your own endpoints.',
+                    'A single developer API for SMS, transactional and bulk email, and WhatsApp, plus WhatsApp AI agents that answer customers and call your own endpoints.',
                 url: null,
                 status: 'live',
                 features: [
@@ -173,9 +173,9 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'crm',
                 name: 'StdioX CRM',
-                tagline: 'Customer Intelligence Platform',
+                tagline: 'One view of every customer',
                 description:
-                    'One view of every customer across products and channels — contacts, segments, analytics and actions that trigger campaigns through StdioX Comms.',
+                    'Contacts, segments and analytics across products and channels, with actions that trigger campaigns through StdioX Comms.',
                 url: null,
                 status: 'early-access',
                 features: [
@@ -188,9 +188,9 @@ export const productCategories: ProductCategory[] = [
             {
                 id: 'bookings',
                 name: 'StdioX Bookings',
-                tagline: 'Appointments, Payments & Your Website',
+                tagline: 'Appointments, deposits and reminders',
                 description:
-                    'Appointment booking for salons, clinics, academies and studios — staff calendars, deposits via M-Pesa and Pesapal, SMS reminders and a built-in website builder.',
+                    'Appointment booking for salons, clinics, academies and studios, with staff calendars, M-Pesa and Pesapal deposits, SMS reminders and a built-in website builder.',
                 url: null,
                 status: 'early-access',
                 features: [

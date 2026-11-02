@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Eyebrow, GlassPage, MagneticLink, PageHeader } from '../components/LiquidGlass';
+import { Eyebrow, GlassPage, PageHeader } from '../components/LiquidGlass';
 import { trackPageView, trackEvent } from '../utils/mixpanel';
 
 const contactMethods = [
@@ -10,40 +10,40 @@ const contactMethods = [
         label: 'Email',
         value: 'info@stdiox.com',
         href: 'mailto:info@stdiox.com',
-        description: 'Drop us a line anytime',
+        note: 'Drop us a line anytime',
     },
     {
         id: 'phone',
         label: 'Customer support',
         value: '+254 183 053 254',
         href: 'tel:+254183053254',
-        description: 'Available Mon–Fri, 9AM–6PM EAT',
+        note: 'Monday to Friday, 9am to 6pm EAT',
     },
     {
         id: 'location',
-        label: 'Location',
-        value: 'Kentmere Valley',
+        label: 'Office',
+        value: 'Kentmere Valley, Kileleshwa',
         href: 'https://maps.google.com/?q=Kentmere+Valley+Kileleshwa+Nairobi',
-        description: 'Kileleshwa, Nairobi · Kenya',
+        note: 'Nairobi, Kenya',
     },
 ];
 
 const reasons = [
     {
         title: 'Product demos',
-        body: "SoldOutAfrica, StdioX Comms, Pay, Looker, Score, CRM and Bookings — tell us which and we'll set up a walkthrough.",
+        body: "SoldOutAfrica, StdioX Comms, Pay, Looker, Score, CRM and Bookings. Tell us which and we'll set up a walkthrough.",
     },
     {
         title: 'Event prefinancing',
         body: "Selling on SoldOutAfrica? Share your date, venue, lineup and budget and we'll tell you what we can prefinance.",
     },
     {
-        title: 'Technical inquiries',
-        body: 'Our engineering team responds to technical questions within 24 hours.',
+        title: 'Technical questions',
+        body: 'Our engineering team answers technical questions within 24 hours.',
     },
     {
-        title: 'Partnerships',
-        body: 'Reach out to discuss collaboration and integration possibilities.',
+        title: 'Partnerships and custom builds',
+        body: 'Integrations, collaborations and platforms built on our stack.',
     },
 ];
 
@@ -66,75 +66,52 @@ export default function ContactPage() {
     return (
         <GlassPage>
             <PageHeader
-                eyebrow="Contact"
-                title="Let's build"
-                muted="something exceptional."
-                lead="Product demos, a custom build or a partnership — talk to the engineers directly."
+                eyebrow="contact"
+                title="Contact us"
+                lead="Email or call for a demo, a partnership, prefinancing on SoldOutAfrica or custom work. You'll reach the engineers who build the products."
             />
 
             <div className="px-4 md:px-8 pb-16 md:pb-28">
-                <div className="max-w-7xl mx-auto space-y-16 md:space-y-28">
-                    {/* Contact methods */}
-                    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {contactMethods.map((method, index) => (
+                <div className="max-w-7xl mx-auto space-y-16 md:space-y-24">
+                    <section data-reveal className="glass rounded-3xl divide-y divide-white/[0.07]">
+                        {contactMethods.map((method) => (
                             <a
                                 key={method.id}
                                 href={method.href}
                                 target={method.id === 'location' ? '_blank' : undefined}
                                 rel={method.id === 'location' ? 'noopener noreferrer' : undefined}
                                 onClick={() => handleContactClick(method.label, method.value)}
-                                data-reveal
-                                style={{ transitionDelay: `${index * 90}ms` }}
-                                className="glass group flex flex-col rounded-3xl p-6 md:p-8 hover:-translate-y-1"
+                                className="group grid grid-cols-[1fr_auto] md:grid-cols-[12rem_1fr_auto] items-center gap-x-6 gap-y-1 px-6 md:px-8 py-6 hover:bg-white/[0.04] transition-colors"
                             >
-                                <div className="flex items-center justify-between mb-10 md:mb-16">
-                                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">{method.label}</span>
-                                    <span className="grid place-items-center w-10 h-10 rounded-full border border-white/15 text-zinc-300 group-hover:bg-white group-hover:text-black group-hover:rotate-[-45deg] transition-all duration-500">
-                                        →
-                                    </span>
-                                </div>
-                                <p className="text-2xl md:text-[1.7rem] font-medium tracking-tight mb-2 break-words">{method.value}</p>
-                                <p className="text-sm text-zinc-500">{method.description}</p>
+                                <span className="col-span-2 md:col-span-1 text-sm text-zinc-500">{method.label}</span>
+                                <span>
+                                    <span className="block text-xl md:text-2xl text-white">{method.value}</span>
+                                    <span className="block mt-1 text-sm text-zinc-500">{method.note}</span>
+                                </span>
+                                <span className="text-zinc-600 group-hover:text-brand transition-colors" aria-hidden="true">
+                                    →
+                                </span>
                             </a>
                         ))}
                     </section>
 
-                    {/* Reasons */}
-                    <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-8 lg:gap-16">
-                        <div data-reveal>
-                            <Eyebrow index="01">Ready to start?</Eyebrow>
-                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-5">
-                                What we can <span className="serif-accent text-zinc-400">help with.</span>
+                    <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
+                        <div data-reveal className="lg:col-span-4">
+                            <Eyebrow>how we can help</Eyebrow>
+                            <h2 className="text-[2rem] sm:text-[2.75rem] font-semibold tracking-[-0.03em] leading-[1.05]">
+                                What to get in touch about
                             </h2>
-                            <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
-                                Office hours are Monday to Friday, 9:00 AM – 6:00 PM East Africa Time.
-                            </p>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div data-reveal className="lg:col-span-8 glass rounded-3xl grid sm:grid-cols-2">
                             {reasons.map((reason, index) => (
                                 <div
                                     key={reason.title}
-                                    data-reveal
-                                    style={{ transitionDelay: `${index * 70}ms` }}
-                                    className="glass rounded-3xl p-6"
+                                    className={`p-6 md:p-8 border-white/[0.07] ${index > 0 ? 'border-t' : ''} ${index === 1 ? 'sm:border-t-0' : ''} ${index % 2 === 1 ? 'sm:border-l' : ''}`}
                                 >
-                                    <h3 className="font-medium mb-2">{reason.title}</h3>
+                                    <h3 className="text-white font-medium mb-2">{reason.title}</h3>
                                     <p className="text-zinc-400 text-sm leading-relaxed">{reason.body}</p>
                                 </div>
                             ))}
-                        </div>
-                    </section>
-
-                    {/* Links */}
-                    <section data-reveal className="text-center">
-                        <p className="text-zinc-500 text-sm mb-6">Operating from Nairobi, building for Africa</p>
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <MagneticLink href="/products" className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-white text-black font-medium hover:bg-zinc-200">
-                                View our work
-                            </MagneticLink>
-                            <MagneticLink href="/about" className="glass inline-flex items-center justify-center px-7 py-3.5 rounded-full font-medium">
-                                Learn about us
-                            </MagneticLink>
                         </div>
                     </section>
                 </div>

@@ -1,27 +1,31 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Eyebrow, GlassPage, MagneticLink, PageHeader } from '../components/LiquidGlass';
+import Link from 'next/link';
+import { Eyebrow, GlassPage, PageHeader } from '../components/LiquidGlass';
+import { buttonPrimary, buttonSecondary } from '../components/ui';
 import { trackPageView } from '../utils/mixpanel';
 
 const principles = [
     {
         title: 'Deep technical work',
-        body: "We don't build features. We build systems. Infrastructure that scales. Code that lasts. Architecture that matters.",
+        body: "We don't build features. We build systems: infrastructure that scales and code that lasts.",
     },
     {
         title: 'Context-aware solutions',
-        body: "Africa's infrastructure challenges are unique. Our solutions account for connectivity, cost, and real-world constraints.",
+        body: "Africa's infrastructure challenges are unique. Our solutions account for connectivity, cost and real-world constraints.",
     },
     {
         title: 'Open collaboration',
-        body: 'Great engineering happens in the open. We share knowledge, contribute to open source, and build with transparency.',
+        body: 'We share knowledge, contribute to open source and build with transparency.',
     },
     {
         title: 'Long-term thinking',
-        body: "We optimize for decades, not quarters. The infrastructure we build today should serve Africa's next generation.",
+        body: "We optimise for decades, not quarters. What we build today should serve Africa's next generation.",
     },
 ];
+
+const sectionHeading = 'text-[2rem] sm:text-[2.75rem] font-semibold tracking-[-0.03em] leading-[1.05]';
 
 export default function AboutPage() {
     useEffect(() => {
@@ -34,107 +38,83 @@ export default function AboutPage() {
     return (
         <GlassPage>
             <PageHeader
-                eyebrow="About us"
-                title="Built by engineers."
-                muted="Defined by impact."
-                lead="StdioX Labs is an engineering company in Nairobi building the ticketing, payments, lending and communications infrastructure African businesses run on."
+                eyebrow="about"
+                title="About StdioX Labs"
+                lead="We're an engineering company in Nairobi. We build our own products, and we run them ourselves."
             />
 
             <div className="px-4 md:px-8 pb-16 md:pb-28">
-                <div className="max-w-7xl mx-auto space-y-20 md:space-y-32">
-                    {/* Origin */}
-                    <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-8 lg:gap-16">
-                        <div data-reveal>
-                            <Eyebrow index="01">Origin</Eyebrow>
-                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
-                                Engineering <span className="serif-accent text-zinc-400">first.</span>
-                            </h2>
+                <div className="max-w-7xl mx-auto space-y-16 md:space-y-24">
+                    <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
+                        <div data-reveal className="lg:col-span-4">
+                            <Eyebrow>origin</Eyebrow>
+                            <h2 className={sectionHeading}>Engineering first</h2>
                         </div>
-                        <div data-reveal className="space-y-6 text-zinc-300 leading-relaxed text-base md:text-lg">
+                        <div data-reveal className="lg:col-span-8 space-y-5 text-zinc-300 leading-relaxed text-base md:text-lg">
                             <p>
-                                StdioX Labs was founded on a simple principle:{' '}
-                                <span className="text-white font-medium">great technology solves real problems</span>. We started in
-                                a room full of engineers who believed Africa&apos;s next chapter would be written in code.
+                                StdioX Labs was founded on a simple principle: great technology solves real problems. We started in a
+                                room full of engineers who believed Africa&apos;s next chapter would be written in code.
                             </p>
                             <p>
-                                Not by consultants theorizing about solutions. Not by copying what worked elsewhere. But by
-                                engineers who understood the constraints, the opportunities, and the technical challenges unique
-                                to our continent.
+                                Not by consultants theorising about solutions, and not by copying what worked elsewhere, but by
+                                engineers who understood the constraints, the opportunities and the technical challenges of our
+                                continent.
                             </p>
                             <p className="text-white">We built our first system from first principles. Then we built the next one better.</p>
                         </div>
                     </section>
 
-                    {/* Principles */}
-                    <section>
-                        <div data-reveal>
-                            <Eyebrow index="02">How we work</Eyebrow>
-                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] mb-10 md:mb-14">
-                                Four principles. <span className="serif-accent text-zinc-400">No exceptions.</span>
-                            </h2>
+                    <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
+                        <div data-reveal className="lg:col-span-4">
+                            <Eyebrow>principles</Eyebrow>
+                            <h2 className={sectionHeading}>How we work</h2>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div data-reveal className="lg:col-span-8 glass rounded-3xl grid sm:grid-cols-2">
                             {principles.map((item, index) => (
                                 <div
                                     key={item.title}
-                                    data-reveal
-                                    style={{ transitionDelay: `${index * 90}ms` }}
-                                    className="glass flex flex-col rounded-3xl p-6 md:p-7 lg:min-h-[280px]"
+                                    className={`p-6 md:p-8 border-white/[0.07] ${index > 0 ? 'border-t' : ''} ${index === 1 ? 'sm:border-t-0' : ''} ${index % 2 === 1 ? 'sm:border-l' : ''}`}
                                 >
-                                    <span className="font-mono text-xs text-zinc-500">0{index + 1}</span>
-                                    <h3 className="mt-8 lg:mt-auto text-xl font-medium tracking-tight mb-3">{item.title}</h3>
+                                    <h3 className="text-white font-medium mb-2">{item.title}</h3>
                                     <p className="text-zinc-400 text-sm leading-relaxed">{item.body}</p>
                                 </div>
                             ))}
                         </div>
                     </section>
 
-                    {/* Mission */}
-                    <section data-reveal className="glass rounded-[2rem] p-6 sm:p-10 md:p-16">
-                        <Eyebrow>Mission</Eyebrow>
-                        <blockquote className="text-2xl sm:text-3xl md:text-5xl font-medium tracking-[-0.02em] leading-[1.2] max-w-5xl">
-                            &ldquo;Africa&apos;s digital transformation will be built by those who understand both the technology
-                            and the terrain. <span className="serif-accent text-zinc-400">We are those engineers.&rdquo;</span>
+                    <section data-reveal className="border-l-2 border-brand pl-6 md:pl-10 max-w-4xl">
+                        <blockquote className="text-2xl md:text-4xl font-medium tracking-[-0.02em] leading-[1.25] text-white">
+                            &ldquo;Africa&apos;s digital transformation will be built by those who understand both the technology and
+                            the terrain. We are those engineers.&rdquo;
                         </blockquote>
                     </section>
 
-                    {/* Team */}
-                    <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-8 lg:gap-16">
-                        <div data-reveal>
-                            <Eyebrow index="03">Our team</Eyebrow>
-                            <h2 className="text-[2rem] sm:text-[2.75rem] lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.05]">
-                                Engineers, <span className="serif-accent text-zinc-400">every one of us.</span>
-                            </h2>
+                    <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
+                        <div data-reveal className="lg:col-span-4">
+                            <Eyebrow>team</Eyebrow>
+                            <h2 className={sectionHeading}>Our team</h2>
                         </div>
-                        <div data-reveal className="space-y-6 text-zinc-300 leading-relaxed text-base md:text-lg">
+                        <div data-reveal className="lg:col-span-8 space-y-5 text-zinc-300 leading-relaxed text-base md:text-lg">
                             <p>
-                                Every member of StdioX Labs is an engineer first. We hire people who can build, who can debug, who
-                                can architect systems that handle millions of transactions.
+                                Every member of StdioX Labs is an engineer first. We hire people who can build, debug and design
+                                systems that handle millions of transactions.
                             </p>
                             <p>
-                                We&apos;re distributed across Africa — Lagos, Nairobi, Cairo, Cape Town, and beyond. Different
-                                cities, one mission:{' '}
-                                <span className="text-white font-medium">engineering Africa&apos;s digital infrastructure</span>.
+                                We&apos;re distributed across Africa, in Lagos, Nairobi, Cairo, Cape Town and beyond. Different cities,
+                                one mission: engineering Africa&apos;s digital infrastructure.
                             </p>
                             <p className="text-white">
-                                If you&apos;re an engineer who thinks in systems, who values craft, and who wants to build technology
-                                that matters — we should talk.
+                                If you&apos;re an engineer who thinks in systems and wants to build technology that matters, we should
+                                talk.
                             </p>
-                        </div>
-                    </section>
-
-                    {/* CTA */}
-                    <section data-reveal className="text-center">
-                        <h2 className="text-[2.25rem] sm:text-5xl lg:text-6xl font-semibold tracking-[-0.04em] leading-[1] mb-10">
-                            Join <span className="serif-accent text-zinc-400">us.</span>
-                        </h2>
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <MagneticLink href="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-zinc-200">
-                                Get in touch
-                            </MagneticLink>
-                            <MagneticLink href="/products" className="glass inline-flex items-center justify-center px-8 py-4 rounded-full font-medium">
-                                See our work
-                            </MagneticLink>
+                            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                                <Link href="/contact" className={buttonPrimary}>
+                                    Get in touch
+                                </Link>
+                                <Link href="/products" className={buttonSecondary}>
+                                    See our products
+                                </Link>
+                            </div>
                         </div>
                     </section>
                 </div>
