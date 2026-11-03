@@ -92,6 +92,36 @@ const GRAY: [number, number, number][] = [[250, 250, 250], [161, 161, 170], [63,
 
 const mix = (a: [number, number, number], b: [number, number, number], t: number) =>
     `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)}, ${Math.round(a[1] + (b[1] - a[1]) * t)}, ${Math.round(a[2] + (b[2] - a[2]) * t)})`;
+// Each dot is stamped from a small pre-rendered sphere rather than building a gradient per dot per frame.
+// Tones between red (0) and gray (1) are rounded to a few steps so the cache stays small.
+const SPRITE_SIZE = 64;
+const TONE_STEPS = 8;
+const sprites = new Map<number, HTMLCanvasElement>();
+
+function sphereSprite(tone: number) {
+    const step = Math.round(tone * TONE_STEPS);
+    let sprite = sprites.get(step);
+    if (!sprite) {
+        const level = step / TONE_STEPS;
+        sprite = document.createElement('canvas');
+        sprite.width = sprite.height = SPRITE_SIZE;
+        const context = sprite.getContext('2d');
+        if (context) {
+            const r = SPRITE_SIZE / 2;
+            const gradient = context.createRadialGradient(r - r * 0.35, r - r * 0.4, r * 0.1, r, r, r);
+            gradient.addColorStop(0, mix(RED[0], GRAY[0], level));
+            gradient.addColorStop(0.45, mix(RED[1], GRAY[1], level));
+            gradient.addColorStop(1, mix(RED[2], GRAY[2], level));
+            context.fillStyle = gradient;
+            context.beginPath();
+            context.arc(r, r, r, 0, Math.PI * 2);
+            context.fill();
+        }
+        sprites.set(step, sprite);
+    }
+    return sprite;
+}
+
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const clamp = (t: number) => Math.min(1, Math.max(0, t));
 
@@ -148,14 +178,7 @@ export function DotField({ shape, progress, className = '' }: DotFieldProps) {
 
                 // Red when the dot belongs to the X (or is Nairobi), fading to gray as it joins the map.
                 const tone = hot ? 0 : shape === 'africa' ? 1 : local;
-                const gradient = ctx.createRadialGradient(x - radius * 0.35, y - radius * 0.4, radius * 0.1, x, y, radius);
-                gradient.addColorStop(0, mix(RED[0], GRAY[0], tone));
-                gradient.addColorStop(0.45, mix(RED[1], GRAY[1], tone));
-                gradient.addColorStop(1, mix(RED[2], GRAY[2], tone));
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.drawImage(sphereSprite(tone), x - radius, y - radius, radius * 2, radius * 2);
             }
 
             // Pulse and label on Nairobi once the map has formed.

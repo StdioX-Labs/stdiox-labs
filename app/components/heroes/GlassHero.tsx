@@ -103,17 +103,17 @@ void main() {
 }
 `;
 
+// Status isn't checked here: reading it straight away would wait for the compile and block the main thread.
 function compile(gl: WebGLRenderingContext, type: number, source: string) {
     const shader = gl.createShader(type);
     if (!shader) return null;
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-        return null;
-    }
     return shader;
 }
+
+// Keep the canvas at or under this many device pixels; the fragment shader's cost scales with it.
+const MAX_PIXELS = 2_000_000;
 
 /** Home hero: a WebGL blob of liquid glass that follows the cursor and refracts the halftone X from the logo. */
 export default function GlassHero() {
@@ -122,122 +122,173 @@ export default function GlassHero() {
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const gl = canvas?.getContext('webgl', { antialias: false });
-        const vertex = gl && compile(gl, gl.VERTEX_SHADER, vertexShader);
-        const fragment = gl && compile(gl, gl.FRAGMENT_SHADER, fragmentShader);
-        const program = gl?.createProgram();
-        if (!canvas || !gl || !vertex || !fragment || !program) {
+        if (!canvas) return;
+        let cancelled = false;
+        let teardown = () => {};
+
+        const showFallback = () => {
             if (fallbackRef.current) fallbackRef.current.hidden = false;
-            return;
-        }
-        gl.attachShader(program, vertex);
-        gl.attachShader(program, fragment);
-        gl.linkProgram(program);
-        gl.useProgram(program);
-
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-        const position = gl.getAttribLocation(program, 'position');
-        gl.enableVertexAttribArray(position);
-        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-        const uniform = (name: string) => gl.getUniformLocation(program, name);
-        const u = {
-            res: uniform('uRes'), time: uniform('uTime'), dpr: uniform('uDpr'),
-            b0: uniform('uB0'), b1: uniform('uB1'), b2: uniform('uB2'), xc: uniform('uXC'), xs: uniform('uXS'), scale: uniform('uScale'),
         };
 
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const pointer = { x: 0, y: 0, active: false };
-        const blobs = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
-        let dpr = 1;
-        let width = 0;
-        let height = 0;
-        let frame = 0;
-        let visible = true;
+        const start = (gl: WebGLRenderingContext, program: WebGLProgram) => {
+            gl.useProgram(program);
+            const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+            const position = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(position);
+            gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-        // Where the X sits: right of the copy on large screens, under it on small ones.
-        const layout = () => {
-            const wide = width >= 1024;
-            return {
-                x: (wide ? 0.72 : 0.5) * width,
-                y: (wide ? 0.5 : 0.19) * height,
-                size: wide ? Math.min(width * 0.2, height * 0.34) : width * 0.27,
+            const uniform = (name: string) => gl.getUniformLocation(program, name);
+            const u = {
+                res: uniform('uRes'), time: uniform('uTime'), dpr: uniform('uDpr'),
+                b0: uniform('uB0'), b1: uniform('uB1'), b2: uniform('uB2'), xc: uniform('uXC'), xs: uniform('uXS'), scale: uniform('uScale'),
+            };
+
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+            const pointer = { x: 0, y: 0, active: false };
+            const blobs = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+            let dpr = 1;
+            let width = 0;
+            let height = 0;
+            let frame = 0;
+            let visible = true;
+
+            // Where the X sits: right of the copy on large screens, under it on small ones.
+            const layout = () => {
+                const wide = width >= 1024;
+                return {
+                    x: (wide ? 0.72 : 0.5) * width,
+                    y: (wide ? 0.5 : 0.19) * height,
+                    size: wide ? Math.min(width * 0.2, height * 0.34) : width * 0.27,
+                };
+            };
+
+            const resize = () => {
+                width = canvas.clientWidth;
+                height = canvas.clientHeight;
+                dpr = Math.min(window.devicePixelRatio || 1, coarsePointer ? 1 : 1.5, Math.sqrt(MAX_PIXELS / Math.max(1, width * height)));
+                canvas.width = Math.round(width * dpr);
+                canvas.height = Math.round(height * dpr);
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                const x = layout();
+                blobs.forEach((blob) => Object.assign(blob, { x: x.x, y: x.y }));
+            };
+
+            const render = (time: number) => {
+                const t = time / 1000;
+                const x = layout();
+                const spread = Math.min(1, Math.max(0.5, width / 1280));
+                // With no cursor, the glass drifts slowly around the X.
+                const target = pointer.active
+                    ? { x: pointer.x, y: pointer.y }
+                    : { x: x.x + Math.cos(t * 0.35) * x.size * 0.9, y: x.y + Math.sin(t * 0.5) * x.size * (width >= 1024 ? 0.5 : 0.2) };
+                blobs[0].x += (target.x - blobs[0].x) * 0.08;
+                blobs[0].y += (target.y - blobs[0].y) * 0.08;
+                blobs[1].x += (blobs[0].x + Math.cos(t * 1.1) * 70 * spread - blobs[1].x) * 0.05;
+                blobs[1].y += (blobs[0].y + Math.sin(t * 1.3) * 60 * spread - blobs[1].y) * 0.05;
+                blobs[2].x += (blobs[0].x - Math.cos(t * 0.8) * 90 * spread - blobs[2].x) * 0.035;
+                blobs[2].y += (blobs[0].y - Math.sin(t * 0.9) * 70 * spread - blobs[2].y) * 0.035;
+
+                // Uniforms are in device pixels with y pointing up, as gl_FragCoord is.
+                const toGl = (point: { x: number; y: number }): [number, number] => [point.x * dpr, (height - point.y) * dpr];
+                gl.uniform2f(u.res, canvas.width, canvas.height);
+                gl.uniform1f(u.time, reduceMotion ? 0 : t);
+                gl.uniform1f(u.dpr, dpr);
+                gl.uniform2f(u.b0, ...toGl(blobs[0]));
+                gl.uniform2f(u.b1, ...toGl(blobs[1]));
+                gl.uniform2f(u.b2, ...toGl(blobs[2]));
+                gl.uniform2f(u.xc, ...toGl(x));
+                gl.uniform1f(u.xs, x.size * dpr);
+                gl.uniform1f(u.scale, spread);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            };
+
+            const loop = (time: number) => {
+                render(time);
+                frame = visible && !reduceMotion ? requestAnimationFrame(loop) : 0;
+            };
+
+            const handleMove = (event: PointerEvent) => {
+                const rect = canvas.getBoundingClientRect();
+                pointer.x = event.clientX - rect.left;
+                pointer.y = event.clientY - rect.top;
+                pointer.active = pointer.y >= 0 && pointer.y <= rect.height;
+                if (reduceMotion) render(performance.now());
+            };
+
+            const resizeObserver = new ResizeObserver(() => {
+                resize();
+                render(performance.now());
+            });
+            resizeObserver.observe(canvas);
+            const visibilityObserver = new IntersectionObserver(([entry]) => {
+                visible = entry.isIntersecting;
+                if (visible && !frame && !reduceMotion) frame = requestAnimationFrame(loop);
+            });
+            visibilityObserver.observe(canvas);
+            window.addEventListener('pointermove', handleMove, { passive: true });
+            resize();
+            render(performance.now());
+            canvas.style.opacity = '1';
+            if (!reduceMotion) frame = requestAnimationFrame(loop);
+
+            teardown = () => {
+                cancelAnimationFrame(frame);
+                resizeObserver.disconnect();
+                visibilityObserver.disconnect();
+                window.removeEventListener('pointermove', handleMove);
             };
         };
 
-        const resize = () => {
-            dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-            width = canvas.clientWidth;
-            height = canvas.clientHeight;
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            const x = layout();
-            blobs.forEach((blob) => Object.assign(blob, { x: x.x, y: x.y }));
+        const setup = () => {
+            if (cancelled) return;
+            const gl = canvas.getContext('webgl', { antialias: false });
+            const vertex = gl && compile(gl, gl.VERTEX_SHADER, vertexShader);
+            const fragment = gl && compile(gl, gl.FRAGMENT_SHADER, fragmentShader);
+            const program = gl?.createProgram();
+            if (!gl || !vertex || !fragment || !program) {
+                showFallback();
+                return;
+            }
+            gl.attachShader(program, vertex);
+            gl.attachShader(program, fragment);
+            gl.linkProgram(program);
+
+            const finish = () => {
+                if (cancelled) return;
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                    console.error(gl.getShaderInfoLog(fragment) || gl.getProgramInfoLog(program));
+                    showFallback();
+                    return;
+                }
+                start(gl, program);
+            };
+
+            // Where the driver supports it, wait for the compile in the background instead of blocking on it.
+            const parallel = gl.getExtension('KHR_parallel_shader_compile');
+            if (!parallel) {
+                finish();
+                return;
+            }
+            const poll = () => {
+                if (cancelled) return;
+                if (gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR)) finish();
+                else requestAnimationFrame(poll);
+            };
+            poll();
         };
 
-        const render = (time: number) => {
-            const t = time / 1000;
-            const x = layout();
-            const spread = Math.min(1, Math.max(0.5, width / 1280));
-            // With no cursor, the glass drifts slowly around the X.
-            const target = pointer.active
-                ? { x: pointer.x, y: pointer.y }
-                : { x: x.x + Math.cos(t * 0.35) * x.size * 0.9, y: x.y + Math.sin(t * 0.5) * x.size * (width >= 1024 ? 0.5 : 0.2) };
-            blobs[0].x += (target.x - blobs[0].x) * 0.08;
-            blobs[0].y += (target.y - blobs[0].y) * 0.08;
-            blobs[1].x += (blobs[0].x + Math.cos(t * 1.1) * 70 * spread - blobs[1].x) * 0.05;
-            blobs[1].y += (blobs[0].y + Math.sin(t * 1.3) * 60 * spread - blobs[1].y) * 0.05;
-            blobs[2].x += (blobs[0].x - Math.cos(t * 0.8) * 90 * spread - blobs[2].x) * 0.035;
-            blobs[2].y += (blobs[0].y - Math.sin(t * 0.9) * 70 * spread - blobs[2].y) * 0.035;
-
-            // Uniforms are in device pixels with y pointing up, as gl_FragCoord is.
-            const toGl = (point: { x: number; y: number }): [number, number] => [point.x * dpr, (height - point.y) * dpr];
-            gl.uniform2f(u.res, canvas.width, canvas.height);
-            gl.uniform1f(u.time, reduceMotion ? 0 : t);
-            gl.uniform1f(u.dpr, dpr);
-            gl.uniform2f(u.b0, ...toGl(blobs[0]));
-            gl.uniform2f(u.b1, ...toGl(blobs[1]));
-            gl.uniform2f(u.b2, ...toGl(blobs[2]));
-            gl.uniform2f(u.xc, ...toGl(x));
-            gl.uniform1f(u.xs, x.size * dpr);
-            gl.uniform1f(u.scale, Math.min(1, Math.max(0.5, width / 1280)));
-            gl.drawArrays(gl.TRIANGLES, 0, 3);
-        };
-
-        const loop = (time: number) => {
-            render(time);
-            frame = visible && !reduceMotion ? requestAnimationFrame(loop) : 0;
-        };
-
-        const handleMove = (event: PointerEvent) => {
-            const rect = canvas.getBoundingClientRect();
-            pointer.x = event.clientX - rect.left;
-            pointer.y = event.clientY - rect.top;
-            pointer.active = pointer.y >= 0 && pointer.y <= rect.height;
-            if (reduceMotion) render(performance.now());
-        };
-
-        const resizeObserver = new ResizeObserver(() => {
-            resize();
-            render(performance.now());
-        });
-        resizeObserver.observe(canvas);
-        const visibilityObserver = new IntersectionObserver(([entry]) => {
-            visible = entry.isIntersecting;
-            if (visible && !frame && !reduceMotion) frame = requestAnimationFrame(loop);
-        });
-        visibilityObserver.observe(canvas);
-        window.addEventListener('pointermove', handleMove, { passive: true });
-        if (!reduceMotion) frame = requestAnimationFrame(loop);
+        // Start WebGL once the page has painted and settled, so it never holds up the content.
+        const hasIdleCallback = typeof window.requestIdleCallback === 'function';
+        const idle = hasIdleCallback ? window.requestIdleCallback(setup, { timeout: 1200 }) : window.setTimeout(setup, 300);
 
         return () => {
-            cancelAnimationFrame(frame);
-            resizeObserver.disconnect();
-            visibilityObserver.disconnect();
-            window.removeEventListener('pointermove', handleMove);
+            cancelled = true;
+            if (hasIdleCallback) window.cancelIdleCallback(idle);
+            else window.clearTimeout(idle);
+            teardown();
         };
     }, []);
 
@@ -251,7 +302,7 @@ export default function GlassHero() {
 
     return (
         <section className="relative h-[100svh] min-h-[640px] overflow-hidden text-white">
-            <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full" />
+            <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-700" />
             <div ref={fallbackRef} hidden className="absolute inset-0 grid place-items-center lg:pl-[40%]">
                 <DotField shape="x" className="max-w-[420px]" />
             </div>
