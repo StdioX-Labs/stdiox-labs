@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     "SoldOutAfrica",
     "event ticketing",
     "event prefinancing",
+    "SME prefinancing",
     "payments",
     "fraud screening",
     "core banking",

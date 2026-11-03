@@ -178,8 +178,8 @@ export default function PlatformSections() {
                             <h2 className={`${sectionHeading} mb-5`}>SoldOutAfrica</h2>
                             <p className="text-zinc-300 text-base md:text-lg leading-relaxed mb-4">{soldOutAfrica.description}</p>
                             <p className="text-zinc-400 leading-relaxed mb-8">
-                                Organizers selling on SoldOutAfrica can also apply for event prefinancing: the venue deposit, artist
-                                advance and marketing budget paid up front, then recovered from ticket sales.
+                                SoldOutAfrica also offers event and SME prefinancing: venue deposits, artist advances and marketing
+                                budgets for organizers, and working capital for small businesses, paid up front and recovered from sales.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <a

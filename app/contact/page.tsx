@@ -34,8 +34,8 @@ const reasons = [
         body: "SoldOutAfrica, StdioX Comms, Pay, Looker, Score, CRM and Bookings. Tell us which and we'll set up a walkthrough.",
     },
     {
-        title: 'Event prefinancing',
-        body: "Selling on SoldOutAfrica? Share your date, venue, lineup and budget and we'll tell you what we can prefinance.",
+        title: 'Event and SME prefinancing',
+        body: "For an event, share your date, venue, lineup and budget. For a business, share your sales and what you need funded. We'll tell you what we can prefinance.",
     },
     {
         title: 'Technical questions',
@@ -68,7 +68,7 @@ export default function ContactPage() {
             <PageHeader
                 eyebrow="contact"
                 title="Contact us"
-                lead="Email or call for a demo, a partnership, prefinancing on SoldOutAfrica or custom work. You'll reach the engineers who build the products."
+                lead="Email or call for a demo, a partnership, event or SME prefinancing, or custom work. You'll reach the engineers who build the products."
             />
 
             <div className="px-4 md:px-8 pb-16 md:pb-28">
