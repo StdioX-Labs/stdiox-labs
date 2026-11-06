@@ -112,7 +112,7 @@ function ProductTabs({ onNavigate }: { onNavigate: (name: string) => void }) {
             </ol>
 
             <div className="lg:col-span-7 lg:sticky lg:top-28">
-                <div className="glass rounded-[2rem] p-4 sm:p-6 md:p-10 min-h-[360px] md:min-h-[460px] flex flex-col justify-center">
+                <div className="glass rounded-[2rem] p-4 sm:p-6 md:p-10 min-h-[360px] md:min-h-[28.75rem] flex flex-col justify-center">
                     <div key={product.id} className="animate-fade-up">
                         <ProductVisual productId={product.id} accent={chrome} />
                     </div>
@@ -170,7 +170,7 @@ export default function PlatformSections() {
                                 alt="SoldOutAfrica, powered by StdioX"
                                 width={805}
                                 height={933}
-                                className="w-full h-auto max-h-[520px] object-contain"
+                                className="w-full h-auto max-h-[min(32.5rem,75svh)] object-contain"
                             />
                         </div>
                         <div className="lg:col-span-7 px-2 pb-4 lg:px-0 lg:pb-0 lg:pr-6">

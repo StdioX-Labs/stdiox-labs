@@ -152,22 +152,25 @@ export default function GlassHero() {
             let dpr = 1;
             let width = 0;
             let height = 0;
+            let navClearance = 0;
             let frame = 0;
             let visible = true;
 
-            // Where the X sits: right of the copy on large screens, under it on small ones.
+            // Where the X sits: right of the copy on large screens, centred with it below the nav; under it on small ones.
             const layout = () => {
                 const wide = width >= 1024;
                 return {
                     x: (wide ? 0.72 : 0.5) * width,
-                    y: (wide ? 0.5 : 0.19) * height,
-                    size: wide ? Math.min(width * 0.2, height * 0.34) : width * 0.27,
+                    y: wide ? (height + navClearance) / 2 : 0.19 * height,
+                    size: wide ? Math.min(width * 0.2, (height - navClearance) * 0.4) : width * 0.27,
                 };
             };
 
             const resize = () => {
                 width = canvas.clientWidth;
                 height = canvas.clientHeight;
+                // Matches the copy's lg:pt-24.
+                navClearance = 6 * parseFloat(getComputedStyle(document.documentElement).fontSize);
                 dpr = Math.min(window.devicePixelRatio || 1, coarsePointer ? 1 : 1.5, Math.sqrt(MAX_PIXELS / Math.max(1, width * height)));
                 canvas.width = Math.round(width * dpr);
                 canvas.height = Math.round(height * dpr);
@@ -301,16 +304,16 @@ export default function GlassHero() {
     };
 
     return (
-        <section className="relative h-[100svh] min-h-[640px] overflow-hidden text-white">
+        <section className="relative h-[100svh] min-h-[640px] lg:min-h-[36rem] overflow-hidden text-white">
             <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-700" />
             <div ref={fallbackRef} hidden className="absolute inset-0 grid place-items-center lg:pl-[40%]">
                 <DotField shape="x" className="max-w-[420px]" />
             </div>
 
-            <div className="relative z-10 flex h-full max-w-7xl mx-auto px-4 md:px-8 items-end lg:items-center pb-14 lg:pb-0 pointer-events-none">
+            <div className="relative z-10 flex h-full max-w-7xl mx-auto px-4 md:px-8 items-end lg:items-center pb-14 lg:pb-0 lg:pt-24 pointer-events-none">
                 <div className="max-w-xl lg:max-w-2xl pointer-events-auto">
                     <Eyebrow>stdiox labs · nairobi</Eyebrow>
-                    <h1 className="text-[2.75rem] sm:text-6xl lg:text-[5rem] font-medium leading-[0.98] tracking-[-0.045em] mb-7">
+                    <h1 className="text-[2.75rem] sm:text-6xl lg:text-[min(5rem,10.5svh)] font-medium leading-[0.98] tracking-[-0.045em] mb-7">
                         We build and run software for businesses in Africa.
                     </h1>
                     <p className="text-lg text-zinc-400 leading-relaxed max-w-lg mb-10">

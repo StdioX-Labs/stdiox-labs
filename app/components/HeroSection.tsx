@@ -26,7 +26,7 @@ export default function HeroSection() {
                         </p>
                     </div>
                     <div data-reveal className="lg:col-span-6 xl:col-span-5">
-                        <DotField shape="africa" className="mx-auto max-w-[340px] sm:max-w-[440px] lg:max-w-[500px]" />
+                        <DotField shape="africa" className="mx-auto max-w-[340px] sm:max-w-[440px] lg:max-w-[min(31.25rem,75svh)]" />
                     </div>
                 </div>
             </section>
